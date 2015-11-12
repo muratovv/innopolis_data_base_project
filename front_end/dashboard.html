@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>DMD project</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="css/dashboard.css" rel="stylesheet">
+    <link href="css/bootstrap.vertical-tabs.css" rel="stylesheet">
+
+    <script language="JavaScript" type="text/javascript">
+        function flexibleTextarea(b) {
+            var a = document.getElementById(b) || b;
+            if (a) {
+                a.style.overflow = "hidden";
+                var e = a.rows = a.rows > 0 ? a.rows : 2;
+                b = a.cols = a.cols > 0 ? a.cols : 20;
+                var g = RegExp("([^\r\n]{" + b + "})([^\r\n])"),
+                        f = RegExp("[^\n]{" + b + "}\n?$|[^\n]{0," + b + "}\n");
+                a.onkeyup = a.onkeydown = function () {
+                    a.value = a.value.replace(g, "$1\r\n$2");
+                    for (var c = 0, d = a.value; d.search(f) >= 0;) {
+                        c++;
+                        d = d.replace(f, "")
+                    }
+                    c++;
+                    if (c < e) c = e;
+                    a.rows = c
+                }
+            }
+        }
+        ;
+        window.onload = function () {
+            flexibleTextarea('textarea');
+        }
+    </script>
+
+    <script language="JavaScript" type="text/javascript">
+        function toggleText(button_id) {
+            if (button_id == "B1") {
+                document.getElementById("but1").firstChild.data = "Select";
+            }
+            else if (button_id == "B2") {
+                document.getElementById('but1').firstChild.data = "Insert";
+            }
+            else if (button_id == "B3") {
+                document.getElementById('but1').firstChild.data = "Delete";
+            }
+            else if (button_id == "B4") {
+                document.getElementById('but1').firstChild.data = "Update";
+            }
+            else if (button_id == "B5") {
+                document.getElementById('but1').firstChild.data = "Related";
+            }
+            else if (button_id == "B6") {
+                document.getElementById('but1').firstChild.data = "Related";
+            }
+        }
+    </script>
+    
+    <script type="text/javascript">
+        $(document).ready(function(){
+          $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+            //Получить название активной вкладки
+            var activeTab = $(e.target).text();
+            // Получить название предыдущей активной вкладки
+            var previousTab = $(e.relatedTarget).text(); 
+            $(".tab-active span").html(activeTab);
+            $(".tab-previous span").html(previousTab);
+          });
+        });
+    </script>
+
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery-1.11.3.min.js"></script>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="topico navbar-brand" href="#">DMD project</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+
+<div class="container-fluid">
+    <div class="row">
+
+
+        <p ></p>
+
+        <div class="tabbable">
+            <ul class="nav nav-pills nav-stacked col-md-2">
+                <li class="active"><a href="#tab1" data-toggle="tab">Records manipulator</a></li>
+                <li><a href="#tab2" data-toggle="tab">SQL queries console</a></li>
+                <!--li><a href="#tab3" data-toggle="tab">Graphics</a></li-->
+            </ul>
+            
+            <div class="tab-content col-md-9">
+                
+                
+                
+                <div class="tab-pane fade in active" id="tab1">
+
+                    <h2>Records manipulator</h2>
+
+                    <ul id="myTab2" class="nav nav-tabs">
+                      <li class="active"><a data-toggle="tab" href="#panely1">Articles</a></li>
+                      <li><a data-toggle="tab" href="#panely2">Authors</a></li>
+                      <li><a data-toggle="tab" href="#panely3">Venues</a></li>
+                      <li><a data-toggle="tab" href="#panely4">Links </a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        
+                      <div id="panely1" class="tab-pane fade in active">
+                        <h3>Select</h3>
+                          
+                            <div class="col-xs-3"> <!-- required for floating -->
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs tabs-left">
+                                  <li class="active"><a href="#select" data-toggle="tab">Select</a></li>
+                                  <li><a href="#insert" data-toggle="tab">Insert</a></li>
+                                  <li><a href="#update" data-toggle="tab">Update</a></li>
+                                  <li><a href="#delete" data-toggle="tab">Delete</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="col-xs-9">
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                  <div class="tab-pane fade in active" id="select">Select</div>
+                                  <div class="tab-pane" id="insert">Insert</div>
+                                  <div class="tab-pane" id="update">Update</div>
+                                  <div class="tab-pane" id="delete">Delete</div>
+                                </div>
+                            </div> 
+                          
+                      </div>
+                      <div id="panely2" class="tab-pane fade">
+                        <h3>Insert</h3>
+                        <p>Содержимое 2 панели...</p>
+                      </div>
+                      <div id="panely3" class="tab-pane fade">
+                        <h3>Update</h3>
+                        <p>Содержимое 3 панели...</p>
+                      </div>
+                      <div id="panely4" class="tab-pane fade">
+                        <h3>Delete</h3>
+                        <p>Содержимое 4 панели...</p>
+                      </div>
+                    </div>
+                    <div class="row">
+                    </div>
+
+                </div>
+                
+                
+                <div class="tab-pane" id="tab2">
+                    <h2>SQL query console</h2>
+
+                    <textarea id="textarea" class="control-group error" cols="130" rows="10"></textarea>
+
+                    <div class="input-group-btn">
+                        <button class="btn btn-primary">Run <span class="glyphicon glyphicon-play"></span></button>
+                        <button type="button" class="btn btn-primary dropdown-toggle"
+                                data-toggle="dropdown"><span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><span>&nbsp;&nbsp;</span><label><input type="radio" name="optradio1">&nbsp;Sort by autors</label></li>
+                            <li><span>&nbsp;&nbsp;</span><label><input type="radio" name="optradio1">&nbsp;Sort by years</label></li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+                <!--div class="tab-pane" id="tab3">
+
+                    <h2>Graphics</h2>
+                    <p>FYODOR ETO TY?
+                    PSHHH , PSHHH , PSHHH! NICHEGO NE SLISHNO! </p>
+
+
+                </div-->
+
+
+                
+
+
+                <div class="row">
+
+                    <div class="col-md-2 col-md-offset-5"></div>
+
+                    <h2 class="sub-header">Result</h2>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>title</th>
+                                <th>year</th>
+                                <th>venue_id</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+
+                                <td>14151</td>
+                                <td>Adaptive Image Content-Based Exposure Control for Scanning Applications in Radiography.</td>
+                                <td>2005</td>
+                                <td>211</td>
+                            </tr>
+                            <tr>
+                                <td>19691</td>
+                                <td>A Brochette of Socially Interactive Robots.</td>
+                                <td>2007</td>
+                                <td>274</td>
+                            </tr>
+                            <tr>
+                                <td>36445</td>
+                                <td>Wireless Sensor Networks for Home Health Care.</td>
+                                <td>2007</td>
+                                <td>367</td>
+                            </tr>
+                            <tr>
+                                <td>52829</td>
+                                <td>Key features of the design methodology enabling a multi-core SoC implementation of a first-generation CELL processor. </td>
+                                <td>2006</td>
+                                <td>495</td>
+                            </tr>
+                            <tr>
+                                <td>55611</td>
+                                <td>The EO-1 Autonomous Science Agent.</td>
+                                <td>2004</td>
+                                <td>509</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery-1.11.3.min.js"></script>
+
+<script>
+    $("#menu-toggle").click(function (e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+</script>
+
+</body>
+</html>
