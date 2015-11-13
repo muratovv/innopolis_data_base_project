@@ -40,7 +40,7 @@ def post_login():
 def base():
     if request.get_cookie(cookie_visited):
         response.delete_cookie(cookie_visited)
-        return "OK"
+        return template('dashboard.html')
     else:
         wrong_auth()
 
