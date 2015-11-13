@@ -1,5 +1,5 @@
-from source_code.parser import Parser
-from source_code.sql_scripts import SQLGenerator
+from server_side.parser import Parser
+from server_side.sql_scripts import SQLGenerator
 import psycopg2
 
 if __name__ == '__main__':

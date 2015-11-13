@@ -1,6 +1,14 @@
 from bottle import *
 
+front_end_path = '../../front_end/'
+
 cookie_visited = "visited"
+
+
+@route('/static/:filename#.*#')
+def server_static(filename):
+    print(filename)
+    return static_file(filename, root=front_end_path)
 
 
 @route('/auth')
@@ -8,13 +16,7 @@ def auth():
     if request.get_cookie(cookie_visited) == "True":
         redirect('/')
     else:
-        return '''
-        <form action="/auth" method="post">
-            Username: <input name="username" type="text" />
-            Password: <input name="password" type="password" />
-            <input value="auth" type="submit" />
-        </form>
-    '''
+        return static_file('signin.html', root=front_end_path)
 
 
 def check_login(username, password):
@@ -23,8 +25,9 @@ def check_login(username, password):
 
 @post('/auth')
 def post_login():
-    username = request.forms.get('username')
+    username = request.forms.get('login')
     password = request.forms.get('password')
+    print(username, password)
     if check_login(username, password):
         response.set_cookie(cookie_visited, "True")
         return redirect('/')
@@ -46,4 +49,6 @@ def wrong_auth():
     redirect('/auth')
 
 
-run(host='localhost', port=8080, debug=True)
+if __name__ == '__main__':
+    TEMPLATE_PATH.append(front_end_path)
+    run(host='localhost', port=8080, debug=True)

@@ -1,4 +1,3 @@
-
 class SQLGenerator:
     @staticmethod
     def insertIntoVenues(str_):
