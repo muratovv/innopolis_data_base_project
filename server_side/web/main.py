@@ -27,7 +27,6 @@ def check_login(username, password):
 def post_login():
     username = request.forms.get('login')
     password = request.forms.get('password')
-    print(username, password)
     if check_login(username, password):
         response.set_cookie(cookie_visited, "True")
         return redirect('/')
@@ -38,8 +37,11 @@ def post_login():
 @route('/')
 @route('/index')
 def base():
+    print("QUERY")
+    for item in request.query:
+        print(item)
     if request.get_cookie(cookie_visited):
-        response.delete_cookie(cookie_visited)
+        # response.delete_cookie(cookie_visited)
         return template('dashboard.html')
     else:
         wrong_auth()
@@ -48,6 +50,24 @@ def base():
 def wrong_auth():
     redirect('/auth')
 
+
+#####
+items = {1: 'first item', 2: 'second item'}
+
+
+@route('/test')
+def jsontest():
+    return template('ajax_test')
+
+
+@post('/getallitems.json')
+def shop_aj_getallitems():
+    for item in request.query:
+        print(item, request.query[item])
+    return items
+
+
+#####
 
 if __name__ == '__main__':
     TEMPLATE_PATH.append(front_end_path)
