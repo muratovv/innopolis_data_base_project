@@ -225,7 +225,6 @@
 <div class="container-fluid">
     <div class="row">
 
-
         <p></p>
 
         <div class="tabbable">
@@ -333,7 +332,6 @@
 
                                     </div>
                                     <!------------------------------------------------------------------------------------------------------------------------------------>
-
                                     <div class="tab-pane" id="insert1">
 
                                         <form class="form-horizontal" id="profileForm2" name="article_insert"
@@ -370,7 +368,6 @@
                                         </form>
 
                                     </div>
-
                                     <!------------------------------------------------------------------------------------------------------------------------------------>
                                     <div class="tab-pane" id="update1">
                                         <form class="form-horizontal" id="profileForm3" name="article_update"
@@ -474,14 +471,138 @@
                             <div class="col-xs-9">
                                 <!-- Tab panes -->
                                 <div class="tab-content">
-                                    <div class="tab-pane fade in active" id="select2">Select2</div>
-                                    <div class="tab-pane" id="insert2">Insert2</div>
-                                    <div class="tab-pane" id="update2">Update2</div>
-                                    <div class="tab-pane" id="delete2">Delete2</div>
+                                    <div class="tab-pane fade in active" id="select2">
+
+                                        <form class="form-horizontal" id="author_select" name="author_select"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="id" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="namea"
+                                                           placeholder="name">
+                                                    <span class="input-group-addon">Name</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" value="Select"
+                                                        onClick="sendFrom(document.getElementById('author_select')); return false;">
+                                            <span class="glyphicon glyphicon-search">
+                                            </span>
+                                                    &#160;Select
+                                                </button>
+                                                <button type="button" class="btn btn-primary dropdown-toggle"
+                                                        data-toggle="dropdown"><span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <span>&nbsp;&nbsp;</span>
+                                                        <label>
+                                                            <input checked="" type="radio" id="autors" name="sort_by">&nbsp;Sort
+                                                            by autors
+                                                        </label>
+                                                    </li>
+                                                    <li><span>&nbsp;&nbsp;</span><label><input type="radio" id="years"
+                                                                                               name="sort_by">&nbsp;Sort
+                                                        by years
+                                                    </label></li>
+                                                </ul>
+
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <div class="tab-pane" id="insert2">
+                                        <form class="form-horizontal" id="author_insert" name="author_insert"
+                                              role="form">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="namea" class="form-control"
+                                                           placeholder="name">
+                                                    <span class="input-group-addon">Name</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" value="Insert"
+                                                        onClick="sendFrom(document.getElementById('author_insert')); return false;">
+                                            <span class="glyphicon glyphicon-import">
+                                            </span>&#160;Insert
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane" id="update2">
+                                        <form class="form-horizontal" id="author_update" name="author_update"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" name="id" class="form-control" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="namea" class="form-control"
+                                                           placeholder="name">
+                                                    <span class="input-group-addon">Name</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" value="Update"
+                                                        onClick="sendFrom(document.getElementById('author_update')); return false;">
+                                            <span class="glyphicon glyphicon-refresh">
+                                            </span>
+                                                    &#160;Update
+                                                </button>
+                                                <button class="btn btn-primary" value="Show"
+                                                        onClick="sendFrom(document.getElementById('author_update')); return false;">
+                                            <span class="glyphicon glyphicon-eye-open">
+                                            </span>
+                                                    &#160;Show
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane" id="delete2">
+                                        <form class="form-horizontal" id="author_delete" name="author_delete"
+                                              role="form">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="id" name="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-danger" value="Delete"
+                                                        onClick="sendFrom(document.getElementById('author_delete')); return false;">
+                                            <span class="glyphicon glyphicon-trash">
+                                            </span>
+                                                    &#160;Delete
+                                                </button>
+                                                <button class="btn btn-primary" value="Show"
+                                                        onClick="sendFrom(document.getElementById('author_delete')); return false;">
+                                            <span class="glyphicon glyphicon-eye-open">
+                                            </span>
+                                                    &#160;Show
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
 
                         </div>
+                        <!------------------------------------------------------------------------------------------------------------------------------------>
+                        <!------------------------------------------------------------------------------------------------------------------------------------>
                         <!------------------------------------------------------------------------------------------------------------------------------------>
                         <div id="panely3" class="tab-pane fade">
                             <h2>Venues</h2>
@@ -499,14 +620,138 @@
                             <div class="col-xs-9">
                                 <!-- Tab panes -->
                                 <div class="tab-content">
-                                    <div class="tab-pane fade in active" id="select3">Select3</div>
-                                    <div class="tab-pane" id="insert3">Insert3</div>
-                                    <div class="tab-pane" id="update3">Update3</div>
-                                    <div class="tab-pane" id="delete3">Delete3</div>
+                                    <div class="tab-pane fade in active" id="select3">
+
+                                        <form class="form-horizontal" id="venue_select" name="venue_select"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="id" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="origin"
+                                                           placeholder="origin">
+                                                    <span class="input-group-addon">Origin</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" value="Select"
+                                                        onClick="sendFrom(document.getElementById('venue_select')); return false;">
+                                            <span class="glyphicon glyphicon-search">
+                                            </span>
+                                                    &#160;Select
+                                                </button>
+                                                <button type="button" class="btn btn-primary dropdown-toggle"
+                                                        data-toggle="dropdown"><span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <span>&nbsp;&nbsp;</span>
+                                                        <label>
+                                                            <input checked="" type="radio" id="autors" name="sort_by">&nbsp;Sort
+                                                            by autors
+                                                        </label>
+                                                    </li>
+                                                    <li><span>&nbsp;&nbsp;</span><label><input type="radio" id="years"
+                                                                                               name="sort_by">&nbsp;Sort
+                                                        by years
+                                                    </label></li>
+                                                </ul>
+
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <div class="tab-pane" id="insert3">
+                                        <form class="form-horizontal" id="venue_insert" name="venue_insert"
+                                              role="form">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="origin" class="form-control"
+                                                           placeholder="origin">
+                                                    <span class="input-group-addon">Origin</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" value="Insert"
+                                                        onClick="sendFrom(document.getElementById('venue_insert')); return false;">
+                                            <span class="glyphicon glyphicon-import">
+                                            </span>&#160;Insert
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane" id="update3">
+                                        <form class="form-horizontal" id="venue_update" name="venue_update"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" name="id" class="form-control" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="origin" class="form-control"
+                                                           placeholder="origin">
+                                                    <span class="input-group-addon">Origin</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" value="Update"
+                                                        onClick="sendFrom(document.getElementById('venue_update')); return false;">
+                                            <span class="glyphicon glyphicon-refresh">
+                                            </span>
+                                                    &#160;Update
+                                                </button>
+                                                <button class="btn btn-primary" value="Show"
+                                                        onClick="sendFrom(document.getElementById('venue_update')); return false;">
+                                            <span class="glyphicon glyphicon-eye-open">
+                                            </span>
+                                                    &#160;Show
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane" id="delete3">
+                                        <form class="form-horizontal" id="venue_delete" name="venue_delete"
+                                              role="form">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="id" name="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-danger" value="Delete"
+                                                        onClick="sendFrom(document.getElementById('venue_delete')); return false;">
+                                            <span class="glyphicon glyphicon-trash">
+                                            </span>
+                                                    &#160;Delete
+                                                </button>
+                                                <button class="btn btn-primary" value="Show"
+                                                        onClick="sendFrom(document.getElementById('venue_delete')); return false;">
+                                            <span class="glyphicon glyphicon-eye-open">
+                                            </span>
+                                                    &#160;Show
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
 
                         </div>
+                        <!------------------------------------------------------------------------------------------------------------------------------------>
+                        <!------------------------------------------------------------------------------------------------------------------------------------>
                         <!------------------------------------------------------------------------------------------------------------------------------------>
                         <div id="panely4" class="tab-pane fade">
                             <h2>Links</h2>
@@ -516,7 +761,6 @@
                                 <ul class="nav nav-tabs tabs-left">
                                     <li class="active"><a href="#select4" data-toggle="tab">Select</a></li>
                                     <li><a href="#insert4" data-toggle="tab">Insert</a></li>
-                                    <li><a href="#update4" data-toggle="tab">Update</a></li>
                                     <li><a href="#delete4" data-toggle="tab">Delete</a></li>
                                 </ul>
                             </div>
@@ -524,10 +768,112 @@
                             <div class="col-xs-9">
                                 <!-- Tab panes -->
                                 <div class="tab-content">
-                                    <div class="tab-pane fade in active" id="select4">Select4</div>
-                                    <div class="tab-pane" id="insert4">Insert4</div>
-                                    <div class="tab-pane" id="update4">Update4</div>
-                                    <div class="tab-pane" id="delete4">Delete4</div>
+                                    <div class="tab-pane fade in active" id="select4">
+
+                                        <form class="form-horizontal" id="links_select" name="links_select"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="id" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="link_id"
+                                                           placeholder="link_id">
+                                                    <span class="input-group-addon">Link</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" value="Select"
+                                                        onClick="sendFrom(document.getElementById('links_select')); return false;">
+                                            <span class="glyphicon glyphicon-search">
+                                            </span>
+                                                    &#160;Select
+                                                </button>
+                                                <button type="button" class="btn btn-primary dropdown-toggle"
+                                                        data-toggle="dropdown"><span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <span>&nbsp;&nbsp;</span>
+                                                        <label>
+                                                            <input checked="" type="radio" id="autors" name="sort_by">&nbsp;Sort
+                                                            by autors
+                                                        </label>
+                                                    </li>
+                                                    <li><span>&nbsp;&nbsp;</span><label><input type="radio" id="years"
+                                                                                               name="sort_by">&nbsp;Sort
+                                                        by years
+                                                    </label></li>
+                                                </ul>
+
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <div class="tab-pane" id="insert4">
+                                        <form class="form-horizontal" id="links_insert" name="links_insert"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="id" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="link_id" class="form-control"
+                                                           placeholder="link_id">
+                                                    <span class="input-group-addon">Link</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" value="Insert"
+                                                        onClick="sendFrom(document.getElementById('links_insert')); return false;">
+                                            <span class="glyphicon glyphicon-import">
+                                            </span>&#160;Insert
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane" id="delete4">
+                                        <form class="form-horizontal" id="links_delete" name="links_delete"
+                                              role="form">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="id" name="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="link_id"
+                                                           name="link_id">
+                                                    <span class="input-group-addon">Link</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-danger" value="Delete"
+                                                        onClick="sendFrom(document.getElementById('links_delete')); return false;">
+                                            <span class="glyphicon glyphicon-trash">
+                                            </span>
+                                                    &#160;Delete
+                                                </button>
+                                                <button class="btn btn-primary" value="Show"
+                                                        onClick="sendFrom(document.getElementById('links_delete')); return false;">
+                                            <span class="glyphicon glyphicon-eye-open">
+                                            </span>
+                                                    &#160;Show
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
 
@@ -543,22 +889,28 @@
                 <div class="tab-pane" id="tab2">
                     <h2>SQL query console</h2>
 
-                    <textarea id="textarea" class="control-group error" cols="130" rows="10"></textarea>
+                    <form class="form-horizontal" id="SQLQueryexecutor" name="SQLQueryexecutor"
+                          role="form">
+                        <textarea id="textarea" name="SQLquery" placeholder="Write your SQL query here..."
+                                  class="form-control" cols="130" rows="10"></textarea>
 
-                    <div class="btn-group">
-                        <button class="btn btn-primary">Run <span class="glyphicon glyphicon-play"></span></button>
-                        <button type="button" class="btn btn-primary dropdown-toggle"
-                                data-toggle="dropdown"><span class="caret"></span></button>
-                        <ul class="dropdown-menu">
-                            <li><span>&nbsp;&nbsp;</span>
-                                <label><input checked="" type="radio" id="authors" name="sort_by">&nbsp;Sort by
-                                    autors</label>
-                            </li>
-                            <li><span>&nbsp;&nbsp;</span><label><input type="radio" id="years" name="sort_by">&nbsp;Sort
-                                by years</label></li>
-                        </ul>
+                        <div class="btn-group">
+                            <button class="btn btn-primary" value="Run"
+                                    onClick="sendFrom(document.getElementById('SQLQueryexecutor')); return false;">Run
+                                <span class="glyphicon glyphicon-play"></span></button>
+                            <button type="button" class="btn btn-primary dropdown-toggle"
+                                    data-toggle="dropdown"><span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><span>&nbsp;&nbsp;</span>
+                                    <label><input checked="" type="radio" id="authors" name="sort_by">&nbsp;Sort by
+                                        autors</label>
+                                </li>
+                                <li><span>&nbsp;&nbsp;</span><label><input type="radio" id="years" name="sort_by">&nbsp;Sort
+                                    by years</label></li>
+                            </ul>
+                        </div>
+                    </form>
 
-                    </div>
 
                 </div>
 
@@ -705,9 +1057,7 @@
                     }
                 },
                 title: {
-                    validators: {
-
-                    }
+                    validators: {}
                 },
                 venue: {
                     validators: {}
@@ -743,7 +1093,7 @@
                         notEmpty: {
                             message: 'The title is required'
                         },
-                        
+
                     }
                 },
                 venue: {
