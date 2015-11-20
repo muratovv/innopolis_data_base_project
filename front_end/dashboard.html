@@ -185,6 +185,7 @@
                     }
                 }
             }
+            params["button"] = event.currentTarget.value;
             return params;
         }
 
@@ -305,7 +306,7 @@
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-primary"
+                                                <button class="btn btn-primary" value="Select"
                                                         onClick="sendFrom(document.getElementById('profileForm1')); return false;">
                                             <span class="glyphicon glyphicon-search">
                                             </span>
@@ -335,7 +336,8 @@
 
                                     <div class="tab-pane" id="insert1">
 
-                                        <form class="form-horizontal" id="profileForm2" role="form">
+                                        <form class="form-horizontal" id="profileForm2" name="article_insert"
+                                              role="form">
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <input type="text" name="title" class="form-control"
@@ -359,7 +361,8 @@
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-primary">
+                                                <button class="btn btn-primary" value="Insert"
+                                                        onClick="sendFrom(document.getElementById('profileForm2')); return false;">
                                             <span class="glyphicon glyphicon-import">
                                             </span>&#160;Insert
                                                 </button>
@@ -370,7 +373,8 @@
 
                                     <!------------------------------------------------------------------------------------------------------------------------------------>
                                     <div class="tab-pane" id="update1">
-                                        <form class="form-horizontal" id="profileForm3" role="form">
+                                        <form class="form-horizontal" id="profileForm3" name="article_update"
+                                              role="form">
                                             <div class="form-group">
 
                                                 <div class="input-group">
@@ -380,30 +384,35 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" placeholder="title">
+                                                    <input type="text" name="title" class="form-control"
+                                                           placeholder="title">
                                                     <span class="input-group-addon">Title</span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" placeholder="year">
+                                                    <input type="text" name="year" class="form-control"
+                                                           placeholder="year">
                                                     <span class="input-group-addon">Year</span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" placeholder="venue">
+                                                    <input type="text" name="venue" class="form-control"
+                                                           placeholder="venue">
                                                     <span class="input-group-addon">Venue</span>
                                                 </div>
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-primary">
+                                                <button class="btn btn-primary" value="Update"
+                                                        onClick="sendFrom(document.getElementById('profileForm3')); return false;">
                                             <span class="glyphicon glyphicon-refresh">
                                             </span>
                                                     &#160;Update
                                                 </button>
-                                                <button class="btn btn-primary">
+                                                <button class="btn btn-primary" value="Show"
+                                                        onClick="sendFrom(document.getElementById('profileForm3')); return false;">
                                             <span class="glyphicon glyphicon-eye-open">
                                             </span>
                                                     &#160;Show
@@ -415,7 +424,8 @@
                                     <!------------------------------------------------------------------------------------------------------------------------------------>
                                     <div class="tab-pane" id="delete1">
 
-                                        <form class="form-horizontal" id="profileForm4" role="form">
+                                        <form class="form-horizontal" id="profileForm4" name="article_delete"
+                                              role="form">
                                             <div class="form-group">
 
                                                 <div class="input-group">
@@ -425,12 +435,14 @@
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-danger">
+                                                <button class="btn btn-danger" value="Delete"
+                                                        onClick="sendFrom(document.getElementById('profileForm4')); return false;">
                                             <span class="glyphicon glyphicon-trash">
                                             </span>
                                                     &#160;Delete
                                                 </button>
-                                                <button class="btn btn-primary">
+                                                <button class="btn btn-primary" value="Show"
+                                                        onClick="sendFrom(document.getElementById('profileForm4')); return false;">
                                             <span class="glyphicon glyphicon-eye-open">
                                             </span>
                                                     &#160;Show
@@ -694,19 +706,11 @@
                 },
                 title: {
                     validators: {
-                        regexp: {
-                            regexp: /^\d+$/,
-                            message: 'The year can only consist of integers'
-                        }
+
                     }
                 },
                 venue: {
-                    validators: {
-                        regexp: {
-                            regexp: /^\d+$/,
-                            message: 'The year can only consist of integers'
-                        }
-                    }
+                    validators: {}
                 }
             }
         });
@@ -739,10 +743,7 @@
                         notEmpty: {
                             message: 'The title is required'
                         },
-                        regexp: {
-                            regexp: /^\d+$/,
-                            message: 'The title can only consist of integers'
-                        }
+                        
                     }
                 },
                 venue: {
@@ -750,10 +751,7 @@
                         notEmpty: {
                             message: 'The venue is required'
                         },
-                        regexp: {
-                            regexp: /^\d+$/,
-                            message: 'The venue can only consist of integers'
-                        }
+
                     }
                 }
             }

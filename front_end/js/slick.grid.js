@@ -1821,7 +1821,7 @@ if (typeof Slick === "undefined") {
 
                 var d = getDataItem(row);
 
-                // TODO:  shorten this loop (index? heuristics? binary search?)
+
                 for (var i = 0, ii = columns.length; i < ii; i++) {
                     // Cells to the right are outside the range.
                     if (columnPosLeft[i] > range.rightPx) {
