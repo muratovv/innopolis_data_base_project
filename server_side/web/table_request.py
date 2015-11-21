@@ -74,16 +74,38 @@ def run_request(query=None):
         if query['table'] == 'venue':
             db_request = Update.venues(query)
 
+        print("<<SQL REQUEST: \n" + str(db_request) + " >>")
+
+        print(db_request)
+        db_response = {"req": 'ok'}
+        try:
+            cur.execute(db_request)
+            pass
+        except:
+            db_response['req'] = 'fail'
+        print(db_response)
+        return db_response
+
+    if query['operation'] == 'delete':
+
+        if query['table'] == 'article':
+            db_request = Delete.articles(query)
+
+        if query['table'] == 'author':
+            db_request = Delete.authors(query)
+
+        if query['table'] == 'venue':
+            db_request = Delete.venues(query)
+
         if query['table'] == 'links':
-            db_request = Update.links(query)
+            db_request = Delete.links(query)
 
         print("<<SQL REQUEST: \n" + str(db_request) + " >>")
 
         print(db_request)
         db_response = {"req": 'ok'}
         try:
-            # cur.execute(db_request)
-            pass
+            cur.execute(db_request)
         except:
             db_response['req'] = 'fail'
         print(db_response)
@@ -173,6 +195,32 @@ class Update:
         if not query:
             query = {}
         return SQLGenerator.generate_update('venues', {'origin': query['origin']}, ('id', query['id']), ['origin'])
+
+
+class Delete:
+    @staticmethod
+    def articles(query=None):
+        if not query:
+            query = {}
+        return SQLGenerator.generate_delete('articles', {'id': query['id']})
+
+    @staticmethod
+    def authors(query=None):
+        if not query:
+            query = {}
+        return SQLGenerator.generate_delete('authors', {'id': query['id']})
+
+    @staticmethod
+    def venues(query=None):
+        if not query:
+            query = {}
+        return SQLGenerator.generate_delete('venues', {'id': query['id']})
+
+    @staticmethod
+    def links(query=None):
+        if not query:
+            query = {}
+        return SQLGenerator.generate_delete('links', {'source_id': query['id'], 'dest_id': query['link_id']})
 
 
 def compute_offset(page_str, page_size_str):

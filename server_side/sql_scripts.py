@@ -136,18 +136,24 @@ OFFSET {4};
                    SQLGenerator.generate_odrderby(ordery_dict))
 
     @staticmethod
-    def generate_insert(db_str, what_lst, values_lst):
+    def generate_insert(tb_str, what_lst, values_lst):
         return """
 INSERT INTO {0}({1})
-  VALUES ({2});""".format(db_str, SQLGenerator.generate_enumerate(what_lst),
+  VALUES ({2});""".format(tb_str, SQLGenerator.generate_enumerate(what_lst),
                           SQLGenerator.generate_enumerate(values_lst, True))
 
     @staticmethod
-    def generate_update(db_str, set_lst, id_pair, excepted_like_lst=[]):
+    def generate_update(tb_str, set_lst, id_pair, excepted_like_lst=[]):
         return """
 UPDATE {0} SET {1}
-WHERE {2} = {3};""".format(db_str, SQLGenerator.generate_dict(set_lst, "", excepted_like_lst, ', '), id_pair[0],
+WHERE {2} = {3};""".format(tb_str, SQLGenerator.generate_dict(set_lst, "", excepted_like_lst, ', '), id_pair[0],
                            id_pair[1])
+
+    @staticmethod
+    def generate_delete(tb_str, where_dict):
+        return """
+DELETE FROM {0}
+{1}; """.format(tb_str, SQLGenerator.generate_dict(where_dict))
 
 
 def is_int(s):
@@ -160,4 +166,4 @@ def is_int(s):
 
 if __name__ == '__main__':
     print("main")
-    print(SQLGenerator.generate_update('films', {'kind': 'dramatic'}, ('id', 123), ['kind']))
+    print(SQLGenerator.generate_delete('table', {'id': 33}))
