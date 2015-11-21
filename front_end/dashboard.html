@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="static/formvalidation/dist/css/formValidation.min.css">
 
     <script src="static/js/jquery-1.11.3.min.js"></script>
+    <script src="static/js/jquery.jscroll.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
     <script src="static/formvalidation/dist/js/formValidation.js"></script>
     <script src="static/formvalidation/dist/js/framework/bootstrap.min.js"></script>
@@ -160,20 +161,21 @@
             xmlhttp.open("POST", "/getallitems.json?" + query, true);
             xmlhttp.send();
             currentId = id;
-//            generateLink();
+            generateLink();
         }
 
 
-        //        function generateLink(){
-        //            var dict = form_params(currentId);
-        //            number++;
-        //            dict['page'] = number;
-        //            var query = generateQuery(dict);
-        //            console.log(query);
-        //            document.getElementById("scroll").innerHTML = '<a href="'+query+'">next</a>';
-        //            document.getElementById("scroll").innerHTML +='<script type="text/javascript">generateLink();</'+'script>';
-        ////            document.getElementById().href = query;
-        //        }
+        function generateLink() {
+            var dict = form_params(currentId);
+            number++;
+            dict['page'] = number;
+            var query = generateQuery(dict);
+            console.log(query);
+            document.getElementById("scrolly").innerHTML = '<a href="' + query + '">next</a>';
+            document.getElementById("scrolly").innerHTML += '<script type="text/javascript">generateLink();</' + 'script>';
+            console.log(document.getElementById("scrolly").innerHTML);
+            //            document.getElementById().href = query;
+        }
 
         function generateQuery(obj) {
             var str = [];
@@ -943,26 +945,22 @@
 
                     <h2 class="sub-header"> Result</h2>
 
-                    <!--<div id="forin">-->
-
-
-                    <!--</div>-->
 
                     <!--TODO Lazy loading-->
 
                     <div id="forin">
-                        <!--<div class="scroll" id="scroll">-->
+                        <div class="scroll">
+                            <div id="scrolly" class="next jscroll-next-parent" style="display: none;">
 
-                        <!--</div>-->
+                            </div>
+                        </div>
                     </div>
 
-
-                    <!---->
-
-
+                    <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button"
+                       title="Click to return on the top page" data-toggle="tooltip" data-placement="left">
+                        <span class="glyphicon glyphicon-chevron-up"></span>
+                    </a>
                 </div>
-
-
 
 
             </div>
@@ -1455,6 +1453,25 @@
             sendFrom(document.getElementById('links_delete'));
             return false;
         });
+        $('.scroll').jscroll();
+
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 50) {
+                $('#back-to-top').fadeIn();
+            } else {
+                $('#back-to-top').fadeOut();
+            }
+        });
+        // scroll body to 0px on click
+        $('#back-to-top').click(function () {
+            $('#back-to-top').tooltip('hide');
+            $('body,html').animate({
+                scrollTop: 0
+            }, 800);
+            return false;
+        });
+
+        $('#back-to-top').tooltip('show');
 
     });
 </script>
