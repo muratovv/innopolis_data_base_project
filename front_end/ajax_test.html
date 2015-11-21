@@ -2,8 +2,80 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
+
+        google.load("visualization", "1", {packages: ["gauge"]});
+        google.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var json = {
+                "req": "[[]]",
+                "io": "10",
+                "io_max": "80",
+                "mem": "10",
+                "mem_max": "50",
+                "cpu": "10",
+                "cpu_max": "100"
+            };
+
+            var data_io = google.visualization.arrayToDataTable([
+                ['Label', 'Value'],
+                ['I/O', Number.parseInt(json["io"]) / Number.parseInt(json["io_max"]) * 100]
+            ]);
+
+            var options_io = {
+                width: 200, height: 200,
+                redFrom: 70, redTo: 100,
+                yellowFrom: 50, yellowTo: 70,
+                greenFrom: 0, greenTo: 50,
+                minorTicks: 5
+            };
+
+            var data_mem = google.visualization.arrayToDataTable([
+                ['Label', 'Value'],
+                ['Memory', Number.parseInt(json["mem"]) / Number.parseInt(json["mem_max"]) * 100]
+            ]);
+
+            var options_mem = {
+                width: 200, height: 200,
+                redFrom: 70, redTo: 100,
+                yellowFrom: 50, yellowTo: 70,
+                greenFrom: 0, greenTo: 50,
+                minorTicks: 5,
+                animation: {
+                    duration: 1000,
+                    easing: "out",
+                }
+            };
+
+            var data_cpu = google.visualization.arrayToDataTable([
+                ['Label', 'Value'],
+                ['CPU', Number.parseInt(json["cpu"]) / Number.parseInt(json["cpu_max"]) * 100]
+            ]);
+
+            var options_cpu = {
+                width: 200, height: 200,
+                redFrom: 70, redTo: 100,
+                yellowFrom: 50, yellowTo: 70,
+                greenFrom: 0, greenTo: 50,
+                minorTicks: 5
+            };
+
+
+            var chart_io = new google.visualization.Gauge(document.getElementById('chart_div_io'));
+            chart_io.draw(data_io, options_io);
+            var chart_mem = new google.visualization.Gauge(document.getElementById('chart_div_mem'));
+            chart_mem.draw(data_mem, options_mem);
+            var chart_cpu = new google.visualization.Gauge(document.getElementById('chart_div_cpu'));
+            chart_cpu.draw(data_cpu, options_cpu);
+
+
+        }
+
+
         var xmlhttp;
+
 
         // Are we using a modern browser or ...
         if (window.XMLHttpRequest) {
@@ -94,25 +166,43 @@
         // the receive function will be triggered once the ajax
         // request is terminated.
 
+        function FA() {
+
+            var len = document.mem_form.elements.length - 1;  //length-1, потому что кнопка считается за элемент и мы ее отбрасываем.
+            var mas = [];  // создаем массив к торый собственно и будем заполнять
+            var paste = document.getElementById('paste');
+            for (var i = 0; i < len; i++) {
+                var val = document.mem_form.elements[i].value;
+                if (val != 0 && val != undefined && val != null) { // дабы не забивать массив не определенными значениями мы делаем проверку на передаваемое значение;
+                    mas.push(val);       // работаем с массивом как со стеком
+                }
+
+            }
+            paste.innerHTML = mas; // ну и вывод массива
+        }
+        function test() {
+
+            var json = {"req": "[[]]", "io": "1", "mem": "2", "cpu": "3"};
+
+            document.write("<h1>" + "IO:" + " " + json["io"] + "</h>");
+            document.write("<h1>" + "MEM:" + " " + json["mem"] + "</h>");
+            document.write("<h1>" + "CPU:" + " " + json["cpu"] + "</h>");
+
+        }
     </script>
 </head>
 
 <body>
+<button onclick="drawChart()">Click me</button>
+<div id="chart_div_io" style="width: 200px; height: 200px;"></div>
+<div id="chart_div_mem" style="width: 200px; height: 200px;"></div>
+<div id="chart_div_cpu" style="width: 200px; height: 200px;"></div>
 
-<form id="form" class="myClass">
-    First name: <input type="text" name="fname"><br>
-    <button onClick="sendFrom(document.getElementById('form')); return false;" id="btn">Submit
-    </button>
-    <br>
+<form action="" onsubmit="FA(this.name);return false;" method="post" name="mem_form" id="fuck"/>
+<input type="text" name="redThreshold" id="name" size="25"/>
+<input type="submit" value="ОК"/>
 </form>
+<span id="paste"></span>
 
-<p>The raw result from the ajax json request is:</p>
-
-<div id="raw"></div>
-<br/>
-
-<p>The for cycle produces :</p>
-
-<div id="forin"></div>
 </body>
 </html>
