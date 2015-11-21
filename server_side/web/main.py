@@ -52,56 +52,34 @@ def wrong_auth():
 
 
 #####
-items = {'req': [
-    (
-        'id',
-        'title',
-        'year',
-        'venue'
-    ),
-    (
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8
-    ),
-    (
-        'alpha',
-        'betta',
-        'gamma',
-        'delta',
-        'epsilon',
-        'dzeta',
-        'eta',
-        'teta'
-    ),
-    [
-        1999,
-        1999,
-        1999,
-        1999,
-        1999,
-        1999,
-        1999,
-        1999
-    ],
-    [
-        'somewhere',
-        'somewhere',
-        'somewhere',
-        'somewhere',
-        'somewhere',
-        'somewhere',
-        'somewhere',
-        'somewhere'
-    ]
-]
-}
-
+items = {'req': [('id', 'title', 'year', 'venue'), (42, 'Overview of the Iris DBMS.', 1989, 'Modern Database Systems'),
+                 (43, 'Features of the ORION Object-Oriented Database System.', 1989,
+                  'Object-Oriented Concepts, Databases, and Applications'),
+                 (44, 'Indexing Techniques for Object-Oriented Databases.', 1989, 'The INGRES Papers'),
+                 (45, 'My Cat Is Object-Oriented.', 1989, 'Temporal Databases'),
+                 (46, 'Making Database Systems Fast Enough for CAD Applications.', 1989, 'Reihe Informatik'),
+                 (47, 'Optimizing Smalltalk Message Performance.', 1989, 'The Compiler Design Handbook'), (
+                     48, 'The Common List Object-Oriented Programming Language Standard.', 1989,
+                     'The Industrial Information Technology Handbook'), (
+                     49, 'Object Orientation as Catalyst for Language-Database Inegration.', 1989,
+                     'The Computer Science and Engineering Handbook'),
+                 (50, 'A Survey of Object-Oriented Concepts.', 1989, 'CSLI Lecture Notes'),
+                 (51, 'Integrated Office Systems.', 1989, 'On the Construction of Programs'), (
+                     52, 'Proteus: A Frame-Based Nonmonotonic Inference System.', 1989,
+                     'Cambridge Tracts in Theoretical Computer Science'), (
+                     53, 'Concurrency Control and Object-Oriented Databases.', 1989,
+                     'Web Engineering: Systematische Entwicklung von Web-Anwendungen'),
+                 (54, 'A Shared View of Sharing: The Treaty of Orlando.', 1989, 'Web & Datenbanken'),
+                 (55, 'Pogo: A Declarative Representation System for Graphics.', 1989, 'Implementations of Prolog'),
+                 (56, 'Concurrent Object-Oriented Programming Languages.', 1989, 'Prolog and Databases'),
+                 (57, 'Directions in Object-Oriented Research.', 1989, 'Handbook of Automated Reasoning'), (
+                     58, 'A Proposal for a Formal Model of Objects.', 1989,
+                     'Computer-Aided Database Design: the DATAID approach'), (
+                     59, 'OZ+: An Object-Oriented Database System.', 1989,
+                     'Logic Programming: Formal Methods and Practical Applications'),
+                 (60, 'The Commercial INGRES Epilogue.', 1986, 'Methodology and Tools for Data Base Design'), (
+                     61, 'Design of Relational Systems (Introduction to Section 1).', 1986,
+                     'Handbook of Theoretical Computer Science, Volume A: Algorithms and Complexity (A)')]}
 
 @route('/test')
 def jsontest():
@@ -110,59 +88,9 @@ def jsontest():
 
 @post('/getallitems.json')
 def shop_aj_getallitems():
-    req = dict(prepare_request(request.query))
-    print(req)
-    return parse_request(req)
-
-
-def parse_request(request_dict=None):
-    print('Parse request')
-    if not request_dict:
-        request_dict = {}
-    if request_dict.get('formname', None):
-        return table_request(request_dict)
-    elif request_dict.get('code', None):
-        return console_request(request_dict)
-    else:
-        return message_request(request_dict, 'Wrong request')
-
-
-def table_request(request_dict=None):
-    if not request_dict:
-        request_dict = {}
-    table_operation = request_dict['formname'].split('_')
-    del request_dict['formname']
-    request_dict['table'] = table_operation[0]
-    request_dict['operation'] = table_operation[1]
-
-    from server_side.web.table_request import run_request
-    return run_request(request_dict)
-
-
-def console_request(request_dict=None):
-    if not request_dict:
-        request_dict = {}
-    return {}
-
-
-def message_request(request_string, message):
-    return {'message': message}
-
-
-def prepare_request(request_dict=None):
-    excepted_list = ['title', 'venue', 'name', 'origin']
-    if not request_dict:
-        request_dict = {}
-    new_dict = {}
-    for key, item in request_dict.items():
-        new_dict[key.lower()] = item.lower()
-        try:
-            if key.lower() not in excepted_list:
-                value = int(item)
-                request_dict[key] = value
-        except ValueError:
-            pass
-    return request_dict
+    for item in request.query:
+        print(item, request.query[item])
+    return items
 
 
 #####
