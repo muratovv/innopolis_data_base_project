@@ -92,6 +92,24 @@ INSERT INTO public.articles
                 return ""
 
     @staticmethod
+    def generate_enumerate(query=None, wrap_strings=False):
+        if not query:
+            query = []
+        pass
+        db_request = ""
+        for i in range(len(query)):
+            if isinstance(query[i], int) or is_int(query[i]):
+                db_request += str(query[i])
+            else:
+                if wrap_strings:
+                    db_request += "'" + query[i] + "'"
+                else:
+                    db_request += query[i]
+            if i < len(query) - 1:
+                db_request += ', '
+        return db_request
+
+    @staticmethod
     def generate_odrderby(orderby_dict=None):
         if not orderby_dict:
             orderby_dict = {}
@@ -112,8 +130,22 @@ OFFSET {4};
         """.format(what_str, from_str, SQLGenerator.generate_where(where_dict), limit_int, skip_int,
                    SQLGenerator.generate_odrderby(ordery_dict))
 
+    @staticmethod
+    def generate_insert(db_str, what_lst, values_lst):
+        return """
+INSERT INTO {0}({1})
+  VALUES ({2});""".format(db_str, SQLGenerator.generate_enumerate(what_lst),
+                          SQLGenerator.generate_enumerate(values_lst, True))
+
+
+def is_int(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
+
 
 if __name__ == '__main__':
     print("main")
-    print(SQLGenerator.generate_select("id, title, year, origin", "articles NATURAL JOIN venues",
-                                       {'year': 1999, 'origin': 'database'}, 10, 0, {'what': 'year', 'by': 'ASC'}))
+    print(SQLGenerator.generate_insert("articles", ['title', 'year', 'venueid'], ['qwerty', 2000, 177]))
