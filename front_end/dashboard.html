@@ -89,6 +89,8 @@
 
     <script type="text/javascript">
         var xmlhttp;
+        var urlscroll;
+        var number = 0;
 
         // Are we using a modern browser or ...
         if (window.XMLHttpRequest) {
@@ -97,6 +99,17 @@
         } else {
             // code for IE6, IE5
             xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+
+        function addRow(tableID) {
+
+            var tableRef = document.getElementById(tableID);
+            var newRow = tableRef.insertRow(0);
+            var newCell = newRow.insertCell(0);
+            var newText = document.createTextNode('New top row');
+            var newCell1 = newRow.insertCell(1);
+            newCell.appendChild(newText);
+            newCell1.appendChild('Hello!!!');
         }
 
         // This will render the two output which substitute the
@@ -130,20 +143,37 @@
                 output += "</tbody> </table>";
                 document.getElementById("forin").innerHTML = output;
 
-            } else {
-                alert("data not available");
             }
         }
 
         xmlhttp.onload = receive;
 
+
+        var currentId;
+
         function sendFrom(id) {
             var dict = form_params(id);
+            number = 0;
+            dict['page'] = number;
             var query = generateQuery(dict);
             console.log(query);
             xmlhttp.open("POST", "/getallitems.json?" + query, true);
             xmlhttp.send();
+            currentId = id;
+//            generateLink();
         }
+
+
+        //        function generateLink(){
+        //            var dict = form_params(currentId);
+        //            number++;
+        //            dict['page'] = number;
+        //            var query = generateQuery(dict);
+        //            console.log(query);
+        //            document.getElementById("scroll").innerHTML = '<a href="'+query+'">next</a>';
+        //            document.getElementById("scroll").innerHTML +='<script type="text/javascript">generateLink();</'+'script>';
+        ////            document.getElementById().href = query;
+        //        }
 
         function generateQuery(obj) {
             var str = [];
@@ -231,7 +261,7 @@
             <ul class="nav nav-pills nav-stacked col-md-2">
                 <li class="active"><a href="#tab1" data-toggle="tab">Records manipulator</a></li>
                 <li><a href="#tab2" data-toggle="tab">SQL queries console</a></li>
-                <!--li><a href="#tab3" data-toggle="tab">Graphics</a></li-->
+                <li><a href="#tab3" data-toggle="tab">Graphics</a></li>
             </ul>
 
             <div class="tab-content col-md-9">
@@ -273,7 +303,7 @@
                                     <!------------------------------------------------------------------------------------------------------------------------------------>
                                     <div class="tab-pane fade in active" id="select1">
 
-                                        <form class="form-horizontal" id="profileForm1" name="article_select"
+                                        <form class="form-horizontal" id="article_select" name="article_select"
                                               role="form">
                                             <div class="form-group">
 
@@ -298,15 +328,14 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" name="venue"
+                                                    <input type="text" class="form-control" name="venue_str"
                                                            placeholder="venue">
                                                     <span class="input-group-addon">Venue</span>
                                                 </div>
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-primary" value="Select"
-                                                        onClick="sendFrom(document.getElementById('profileForm1')); return false;">
+                                                <button type="submit" class="btn btn-primary" value="Select">
                                             <span class="glyphicon glyphicon-search">
                                             </span>
                                                     &#160;Select
@@ -334,7 +363,7 @@
                                     <!------------------------------------------------------------------------------------------------------------------------------------>
                                     <div class="tab-pane" id="insert1">
 
-                                        <form class="form-horizontal" id="profileForm2" name="article_insert"
+                                        <form class="form-horizontal" id="article_insert" name="article_insert"
                                               role="form">
                                             <div class="form-group">
                                                 <div class="input-group">
@@ -352,15 +381,14 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="input-group">
-                                                    <input type="text" name="venue" class="form-control"
+                                                    <input type="text" name="venue_str" class="form-control"
                                                            placeholder="venue">
                                                     <span class="input-group-addon">Venue</span>
                                                 </div>
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-primary" value="Insert"
-                                                        onClick="sendFrom(document.getElementById('profileForm2')); return false;">
+                                                <button class="btn btn-primary" value="Insert">
                                             <span class="glyphicon glyphicon-import">
                                             </span>&#160;Insert
                                                 </button>
@@ -370,7 +398,7 @@
                                     </div>
                                     <!------------------------------------------------------------------------------------------------------------------------------------>
                                     <div class="tab-pane" id="update1">
-                                        <form class="form-horizontal" id="profileForm3" name="article_update"
+                                        <form class="form-horizontal" id="article_update" name="article_update"
                                               role="form">
                                             <div class="form-group">
 
@@ -395,21 +423,19 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="input-group">
-                                                    <input type="text" name="venue" class="form-control"
+                                                    <input type="text" name="venue_str" class="form-control"
                                                            placeholder="venue">
                                                     <span class="input-group-addon">Venue</span>
                                                 </div>
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-primary" value="Update"
-                                                        onClick="sendFrom(document.getElementById('profileForm3')); return false;">
+                                                <button type="submit" class="btn btn-primary" value="Update">
                                             <span class="glyphicon glyphicon-refresh">
                                             </span>
                                                     &#160;Update
                                                 </button>
-                                                <button class="btn btn-primary" value="Show"
-                                                        onClick="sendFrom(document.getElementById('profileForm3')); return false;">
+                                                <button type="submit" class="btn btn-primary" value="Show">
                                             <span class="glyphicon glyphicon-eye-open">
                                             </span>
                                                     &#160;Show
@@ -421,7 +447,7 @@
                                     <!------------------------------------------------------------------------------------------------------------------------------------>
                                     <div class="tab-pane" id="delete1">
 
-                                        <form class="form-horizontal" id="profileForm4" name="article_delete"
+                                        <form class="form-horizontal" id="article_delete" name="article_delete"
                                               role="form">
                                             <div class="form-group">
 
@@ -432,14 +458,12 @@
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-danger" value="Delete"
-                                                        onClick="sendFrom(document.getElementById('profileForm4')); return false;">
+                                                <button class="btn btn-danger" value="Delete">
                                             <span class="glyphicon glyphicon-trash">
                                             </span>
                                                     &#160;Delete
                                                 </button>
-                                                <button class="btn btn-primary" value="Show"
-                                                        onClick="sendFrom(document.getElementById('profileForm4')); return false;">
+                                                <button class="btn btn-primary" value="Show">
                                             <span class="glyphicon glyphicon-eye-open">
                                             </span>
                                                     &#160;Show
@@ -491,8 +515,7 @@
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-primary" value="Select"
-                                                        onClick="sendFrom(document.getElementById('author_select')); return false;">
+                                                <button class="btn btn-primary" value="Select">
                                             <span class="glyphicon glyphicon-search">
                                             </span>
                                                     &#160;Select
@@ -529,8 +552,7 @@
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-primary" value="Insert"
-                                                        onClick="sendFrom(document.getElementById('author_insert')); return false;">
+                                                <button class="btn btn-primary" value="Insert">
                                             <span class="glyphicon glyphicon-import">
                                             </span>&#160;Insert
                                                 </button>
@@ -556,14 +578,12 @@
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-primary" value="Update"
-                                                        onClick="sendFrom(document.getElementById('author_update')); return false;">
+                                                <button class="btn btn-primary" value="Update">
                                             <span class="glyphicon glyphicon-refresh">
                                             </span>
                                                     &#160;Update
                                                 </button>
-                                                <button class="btn btn-primary" value="Show"
-                                                        onClick="sendFrom(document.getElementById('author_update')); return false;">
+                                                <button class="btn btn-primary" value="Show">
                                             <span class="glyphicon glyphicon-eye-open">
                                             </span>
                                                     &#160;Show
@@ -582,14 +602,12 @@
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-danger" value="Delete"
-                                                        onClick="sendFrom(document.getElementById('author_delete')); return false;">
+                                                <button class="btn btn-danger" value="Delete">
                                             <span class="glyphicon glyphicon-trash">
                                             </span>
                                                     &#160;Delete
                                                 </button>
-                                                <button class="btn btn-primary" value="Show"
-                                                        onClick="sendFrom(document.getElementById('author_delete')); return false;">
+                                                <button class="btn btn-primary" value="Show">
                                             <span class="glyphicon glyphicon-eye-open">
                                             </span>
                                                     &#160;Show
@@ -640,8 +658,7 @@
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-primary" value="Select"
-                                                        onClick="sendFrom(document.getElementById('venue_select')); return false;">
+                                                <button class="btn btn-primary" value="Select">
                                             <span class="glyphicon glyphicon-search">
                                             </span>
                                                     &#160;Select
@@ -678,8 +695,7 @@
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-primary" value="Insert"
-                                                        onClick="sendFrom(document.getElementById('venue_insert')); return false;">
+                                                <button class="btn btn-primary" value="Insert">
                                             <span class="glyphicon glyphicon-import">
                                             </span>&#160;Insert
                                                 </button>
@@ -705,14 +721,12 @@
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-primary" value="Update"
-                                                        onClick="sendFrom(document.getElementById('venue_update')); return false;">
+                                                <button class="btn btn-primary" value="Update">
                                             <span class="glyphicon glyphicon-refresh">
                                             </span>
                                                     &#160;Update
                                                 </button>
-                                                <button class="btn btn-primary" value="Show"
-                                                        onClick="sendFrom(document.getElementById('venue_update')); return false;">
+                                                <button class="btn btn-primary" value="Show">
                                             <span class="glyphicon glyphicon-eye-open">
                                             </span>
                                                     &#160;Show
@@ -731,14 +745,12 @@
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-danger" value="Delete"
-                                                        onClick="sendFrom(document.getElementById('venue_delete')); return false;">
+                                                <button class="btn btn-danger" value="Delete">
                                             <span class="glyphicon glyphicon-trash">
                                             </span>
                                                     &#160;Delete
                                                 </button>
-                                                <button class="btn btn-primary" value="Show"
-                                                        onClick="sendFrom(document.getElementById('venue_delete')); return false;">
+                                                <button class="btn btn-primary" value="Show">
                                             <span class="glyphicon glyphicon-eye-open">
                                             </span>
                                                     &#160;Show
@@ -788,8 +800,7 @@
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-primary" value="Select"
-                                                        onClick="sendFrom(document.getElementById('links_select')); return false;">
+                                                <button class="btn btn-primary" value="Select">
                                             <span class="glyphicon glyphicon-search">
                                             </span>
                                                     &#160;Select
@@ -833,8 +844,7 @@
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-primary" value="Insert"
-                                                        onClick="sendFrom(document.getElementById('links_insert')); return false;">
+                                                <button class="btn btn-primary" value="Insert">
                                             <span class="glyphicon glyphicon-import">
                                             </span>&#160;Insert
                                                 </button>
@@ -859,14 +869,12 @@
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-danger" value="Delete"
-                                                        onClick="sendFrom(document.getElementById('links_delete')); return false;">
+                                                <button class="btn btn-danger" value="Delete">
                                             <span class="glyphicon glyphicon-trash">
                                             </span>
                                                     &#160;Delete
                                                 </button>
-                                                <button class="btn btn-primary" value="Show"
-                                                        onClick="sendFrom(document.getElementById('links_delete')); return false;">
+                                                <button class="btn btn-primary" value="Show">
                                             <span class="glyphicon glyphicon-eye-open">
                                             </span>
                                                     &#160;Show
@@ -935,130 +943,27 @@
 
                     <h2 class="sub-header"> Result</h2>
 
+                    <!--<div id="forin">-->
+
+
+                    <!--</div>-->
+
+                    <!--TODO Lazy loading-->
+
                     <div id="forin">
+                        <!--<div class="scroll" id="scroll">-->
 
-
+                        <!--</div>-->
                     </div>
 
-                    <!--<p id="navigation" class="text-center navigate navigate_bottom"></p>-->
+
+                    <!---->
+
+
                 </div>
 
 
-                <!--<script type="text/javascript">-->
-                <!--$('.navigate_top,.navigate_bottom').bootpag({-->
-                <!--total: 20,-->
-                <!--page: 2,-->
-                <!--maxVisible: 5,-->
-                <!--leaps: true,-->
-                <!--firstLastUse: true,-->
-                <!--first: '←',-->
-                <!--last: '→',-->
-                <!--wrapClass: 'pagination',-->
-                <!--activeClass: 'active',-->
-                <!--disabledClass: 'disabled',-->
-                <!--nextClass: 'next',-->
-                <!--prevClass: 'prev',-->
-                <!--lastClass: 'last',-->
-                <!--firstClass: 'first'-->
-                <!--}).on("page", function(event, num){-->
-                <!--$(".content4").html("Page " + num); // or some ajax content loading...-->
-                <!--});-->
-                <!--</script>-->
 
-                <!---------------------------------->
-
-                <!--#############-SG-->
-
-                <!--<script src="static/js/jquery.event.drag-2.2.js"></script>-->
-                <!--<script src="static/js/slick.core.js"></script>-->
-                <!--<script src="static/js/slick.grid.js"></script>-->
-
-                <!--<script src="static/js/firebugx.js"></script>-->
-                <!--<script src="static/js/jquery-ui-1.8.16.custom.min.js"></script>-->
-                <!--<script src="static/js/jquery.event.drag-2.2.js"></script>-->
-                <!--<script src="static/js/jquery.jsonp-2.4.min.js"></script>-->
-
-                <!--<script src="static/js/slick.remotemodel.js"></script>-->
-
-                <!--<script>-->
-                <!--var grid;-->
-                <!--var loader = new Slick.Data.RemoteModel();-->
-                <!--var storyTitleFormatter = function (row, cell, value, columnDef, dataContext) {-->
-                <!--s = "<b><a href='" + dataContext["url"] + "' target=_blank>" +-->
-                <!--dataContext["title"] + "</a></b><br/>";-->
-                <!--desc = dataContext["text"];-->
-                <!--if (desc) { // on Hackernews many stories don't have a description-->
-                <!--s += desc;-->
-                <!--}-->
-                <!--return s;-->
-                <!--};-->
-                <!--var dateFormatter = function (row, cell, value, columnDef, dataContext) {-->
-                <!--return (value.getMonth() + 1) + "/" + value.getDate() + "/" + value.getFullYear();-->
-                <!--};-->
-                <!--var columns = [-->
-                <!--{id: "num", name: "#", field: "index", width: 40},-->
-                <!--{-->
-                <!--id: "story",-->
-                <!--name: "Story",-->
-                <!--width: 520,-->
-                <!--formatter: storyTitleFormatter,-->
-                <!--cssClass: "cell-story"-->
-                <!--},-->
-                <!--{-->
-                <!--id: "date",-->
-                <!--name: "Date",-->
-                <!--field: "create_ts",-->
-                <!--width: 60,-->
-                <!--formatter: dateFormatter,-->
-                <!--sortable: true-->
-                <!--},-->
-                <!--{id: "points", name: "Points", field: "points", width: 60, sortable: true}-->
-                <!--];-->
-                <!--var options = {-->
-                <!--rowHeight: 64,-->
-                <!--editable: false,-->
-                <!--enableAddRow: false,-->
-                <!--enableCellNavigation: false-->
-                <!--};-->
-                <!--var loadingIndicator = null;-->
-                <!--$(function () {-->
-                <!--grid = new Slick.Grid("#myGrid", loader.data, columns, options);-->
-                <!--grid.onViewportChanged.subscribe(function (e, args) {-->
-                <!--var vp = grid.getViewport();-->
-                <!--loader.ensureData(vp.top, vp.bottom);-->
-                <!--});-->
-                <!--grid.onSort.subscribe(function (e, args) {-->
-                <!--loader.setSort(args.sortCol.field, args.sortAsc ? 1 : -1);-->
-                <!--var vp = grid.getViewport();-->
-                <!--loader.ensureData(vp.top, vp.bottom);-->
-                <!--});-->
-                <!--loader.onDataLoading.subscribe(function () {-->
-                <!--if (!loadingIndicator) {-->
-                <!--loadingIndicator = $("<span class='loading-indicator'><label>Buffering...</label></span>").appendTo(document.body);-->
-                <!--var $g = $("#myGrid");-->
-                <!--loadingIndicator-->
-                <!--.css("position", "absolute")-->
-                <!--.css("top", $g.position().top + $g.height() / 2 - loadingIndicator.height() / 2)-->
-                <!--.css("left", $g.position().left + $g.width() / 2 - loadingIndicator.width() / 2);-->
-                <!--}-->
-                <!--loadingIndicator.show();-->
-                <!--});-->
-                <!--loader.onDataLoaded.subscribe(function (e, args) {-->
-                <!--for (var i = args.from; i <= args.to; i++) {-->
-                <!--grid.invalidateRow(i);-->
-                <!--}-->
-                <!--grid.updateRowCount();-->
-                <!--grid.render();-->
-                <!--loadingIndicator.fadeOut();-->
-                <!--});-->
-                <!--loader.setSort("create_ts", -1);-->
-                <!--grid.setSortColumn("date", false);-->
-                <!--// load the first page-->
-                <!--grid.onViewportChanged.notify();-->
-                <!--})-->
-                <!--</script>-->
-
-                <!--#############-SG-->
 
             </div>
             <!------------------------------------------------------------------------------------------------------------------------------------>
@@ -1083,10 +988,11 @@
     });
 </script>
 
+
 <!--*********************************************************************************************************************-->
 <script language="JavaScript" type="text/javascript">
     $(document).ready(function () {
-        $('#profileForm1').formValidation({
+        $('#article_select').formValidation({
             framework: 'bootstrap',
             icon: {
                 valid: 'glyphicon glyphicon-ok',
@@ -1118,17 +1024,19 @@
                 title: {
                     validators: {}
                 },
-                venue: {
+                venue_str: {
                     validators: {}
                 }
             }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('article_select'));
+            return false;
         });
-    });
-</script>
-<!--*********************************************************************************************************************-->
-<script language="JavaScript" type="text/javascript">
-    $(document).ready(function () {
-        $('#profileForm2').formValidation({
+        ;
+        $('#article_insert').formValidation({
             framework: 'bootstrap',
             icon: {
                 valid: 'glyphicon glyphicon-ok',
@@ -1144,6 +1052,11 @@
                         regexp: {
                             regexp: /^\d+$/,
                             message: 'The year can only consist of integers'
+                        },
+                        between: {
+                            min: 1900,
+                            max: 2015,
+                            message: 'The year must be between 1900 and 2015'
                         }
                     }
                 },
@@ -1155,7 +1068,7 @@
 
                     }
                 },
-                venue: {
+                venue_str: {
                     validators: {
                         notEmpty: {
                             message: 'The venue is required'
@@ -1164,14 +1077,54 @@
                     }
                 }
             }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('article_insert'));
+            return false;
         });
-    });
-</script>
-
-<!--*********************************************************************************************************************-->
-<script language="JavaScript" type="text/javascript">
-    $(document).ready(function () {
-        $('#profileForm3').formValidation({
+        $('#article_update').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                },
+                year: {
+                    validators: {
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The year can only consist of integers'
+                        },
+                        between: {
+                            min: 1900,
+                            max: 2015,
+                            message: 'The year must be between 1900 and 2015'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('article_update'));
+            return false;
+        });
+        $('#article_delete').formValidation({
             framework: 'bootstrap',
             icon: {
                 valid: 'glyphicon glyphicon-ok',
@@ -1191,14 +1144,65 @@
                     }
                 }
             }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('article_delete'));
+            return false;
         });
-    });
-</script>
+        $('#author_select').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                },
+                namea: {
+                    validators: {}
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('author_select'));
+            return false;
+        });
+        $('#author_insert').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                namea: {
+                    validators: {
+                        notEmpty: {
+                            message: 'name is required'
+                        }
+                    }
+                }
 
-<!--*********************************************************************************************************************-->
-<script language="JavaScript" type="text/javascript">
-    $(document).ready(function () {
-        $('#profileForm4').formValidation({
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('author_insert'));
+            return false;
+        });
+        $('#author_update').formValidation({
             framework: 'bootstrap',
             icon: {
                 valid: 'glyphicon glyphicon-ok',
@@ -1218,7 +1222,240 @@
                     }
                 }
             }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('author_update'));
+            return false;
         });
+        $('#author_delete').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('author_delete'));
+            return false;
+        });
+        $('#venue_select').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('venue_select'));
+            return false;
+        });
+        $('#venue_insert').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                origin: {
+                    validators: {
+                        notEmpty: {
+                            message: 'origin is required'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('venue_insert'));
+            return false;
+        });
+        $('#venue_update').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('venue_update'));
+            return false;
+        });
+        $('#venue_delete').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('venue_delete'));
+            return false;
+        });
+        $('#links_select').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                },
+                link_id: {
+                    validators: {
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('links_select'));
+            return false;
+        });
+        $('#links_insert').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                },
+                link_id: {
+                    validators: {
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The link_id can only consist of integers'
+                        },
+                        notEmpty: {
+                            message: 'The link_id is required'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('links_insert'));
+            return false;
+        });
+        ;
+        $('#links_delete').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('links_delete'));
+            return false;
+        });
+
     });
 </script>
 
