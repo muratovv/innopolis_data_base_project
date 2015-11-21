@@ -14,12 +14,15 @@
     <link href="static/css/bootstrap.min.css" rel="stylesheet">
     <link href="static/css/dashboard.css" rel="stylesheet">
     <link href="static/css/bootstrap.vertical-tabs.css" rel="stylesheet">
+    <link href="static/css/buttons.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/slick.grid.css" type="text/css"/>
     <link rel="stylesheet" href="static/formvalidation/dist/css/formValidation.min.css">
-    
+
     <script src="static/js/jquery-1.11.3.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
     <script src="static/formvalidation/dist/js/formValidation.js"></script>
     <script src="static/formvalidation/dist/js/framework/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/jquery.bootpag.min.js"></script>
 
     <script language="JavaScript" type="text/javascript">
         function flexibleTextarea(b) {
@@ -70,26 +73,135 @@
             }
         }
     </script>
-    
+
     <script type="text/javascript">
-        $(document).ready(function(){
-          $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
-            //Получить название активной вкладки
-            var activeTab = $(e.target).text();
-            // Получить название предыдущей активной вкладки
-            var previousTab = $(e.relatedTarget).text(); 
-            $(".tab-active span").html(activeTab);
-            $(".tab-previous span").html(previousTab);
-          });
+        $(document).ready(function () {
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                //Получить название активной вкладки
+                var activeTab = $(e.target).text();
+                // Получить название предыдущей активной вкладки
+                var previousTab = $(e.relatedTarget).text();
+                $(".tab-active span").html(activeTab);
+                $(".tab-previous span").html(previousTab);
+            });
         });
     </script>
-    
-    
+
+    <script type="text/javascript">
+        var xmlhttp;
+
+        // Are we using a modern browser or ...
+        if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+
+        // This will render the two output which substitute the
+        // elements id="raw" and id="forin"
+        function receive() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                // var jsonobj = eval ("(" + xmlhttp.responseText + ")");
+                var jsonobj = JSON.parse(xmlhttp.responseText);
+
+                var output = xmlhttp.responseText;
+                //document.getElementById("raw").innerHTML = output;
+
+                output = "<div class=\"table-responsive\">" +
+                        "<table class=\"table table-striped\">" +
+                        "<thead>" +
+                        "<tr>";
+                for (var j = 0; j < jsonobj['req'][0].length; j++) {
+                    output += "<th>" + jsonobj['req'][0][j] + "</th>";
+                }
+                output += "</tr>" +
+                        "</thead>";
+
+                for (i in jsonobj['req'][1]) {
+                    output += '<tr>';
+                    for (var j = 1; j < jsonobj['req'][0].length + 1; j++) {
+                        output += '<td>' + jsonobj['req'][j][i] + '</td>';
+                    }
+                    output += '</tr>';
+                }
+
+                output += "</tbody> </table>";
+                document.getElementById("forin").innerHTML = output;
+
+            } else {
+                alert("data not available");
+            }
+        }
+
+        xmlhttp.onload = receive;
+
+        function sendFrom(id) {
+            var dict = form_params(id);
+            var query = generateQuery(dict);
+            console.log(query);
+            xmlhttp.open("POST", "/getallitems.json?" + query, true);
+            xmlhttp.send();
+        }
+
+        function generateQuery(obj) {
+            var str = [];
+            for (var p in obj)
+                if (obj.hasOwnProperty(p)) {
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                }
+            return str.join("&");
+        }
+
+        function form_params(form) {
+            var params = [];
+            var el = document.getElementById("navigation");
+            var length = form.elements.length;
+            params["formname"] = form.name;
+            params["page_size"] = 20;
+            for (var i = 0; i < length; i++) {
+                element = form.elements[i];
+
+                if (element.tagName == 'TEXTAREA') {
+                    params[element.name] = element.value
+                }
+                else if (element.tagName == 'INPUT') {
+                    if (element.type == 'text' || element.type == 'hidden' || element.type == 'password') {
+                        params[element.name] = element.value
+                    }
+                    else if (element.type == 'radio' && element.checked) {
+                        if (!element.value)
+                            params[element.name] = element.id;
+                        else
+                            params[element.name] = element.id;
+
+                    }
+                    else if (element.type == 'checkbox' && element.checked) {
+                        if (!element.value)
+                            params[element.name] = "on";
+                        else
+                            params[element.name] = element.value
+                    }
+                }
+            }
+            params["button"] = event.currentTarget.value;
+            return params;
+        }
+
+
+        // xmlhttp.onreadystatechange = GetArticles;
+        // the receive function will be triggered once the ajax
+        // request is terminated.
+
+    </script>
+
+
 </head>
 
 <body>
 
-    
+
 <!------------------------------------------------------------------------------------------------------------------------------------>
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
@@ -113,8 +225,7 @@
 <div class="container-fluid">
     <div class="row">
 
-
-        <p ></p>
+        <p></p>
 
         <div class="tabbable">
             <ul class="nav nav-pills nav-stacked col-md-2">
@@ -122,373 +233,782 @@
                 <li><a href="#tab2" data-toggle="tab">SQL queries console</a></li>
                 <!--li><a href="#tab3" data-toggle="tab">Graphics</a></li-->
             </ul>
-            
+
             <div class="tab-content col-md-9">
-                
-                
- <!------------------------------------------------------------------------------------------------------------------------------------>               
+
+
+                <!------------------------------------------------------------------------------------------------------------------------------------>
                 <div class="tab-pane fade in active" id="tab1">
 
                     <h2>Records manipulator</h2>
 
                     <ul id="myTab2" class="nav nav-tabs">
-                      <li class="active"><a data-toggle="tab" href="#panely1"><span class="glyphicon glyphicon-list-alt"></span></a></li>
-                      <li><a data-toggle="tab" href="#panely2"><span class="glyphicon glyphicon-user"></span></a></li>
-                      <li><a data-toggle="tab" href="#panely3"><span class="glyphicon glyphicon-tasks"></span></a></li>
-                      <li><a data-toggle="tab" href="#panely4"><span class="glyphicon glyphicon-link"></span> </a></li>
+                        <li class="active"><a data-toggle="tab" href="#panely1"><span
+                                class="glyphicon glyphicon-list-alt"></span></a></li>
+                        <li><a data-toggle="tab" href="#panely2"><span class="glyphicon glyphicon-user"></span></a></li>
+                        <li><a data-toggle="tab" href="#panely3"><span class="glyphicon glyphicon-tasks"></span></a>
+                        </li>
+                        <li><a data-toggle="tab" href="#panely4"><span class="glyphicon glyphicon-link"></span> </a>
+                        </li>
                     </ul>
 
                     <div class="tab-content">
-<!------------------------------------------------------------------------------------------------------------------------------------>
-                      <div id="panely1" class="tab-pane fade in active">
-                          <h2>Articles</h2>
+                        <!------------------------------------------------------------------------------------------------------------------------------------>
+                        <div id="panely1" class="tab-pane fade in active">
+                            <h2>Articles</h2>
+
                             <div class="col-xs-3"> <!-- required for floating -->
                                 <!-- Nav tabs -->
                                 <ul class="nav nav-tabs tabs-left">
-                                  <li class="active"><a href="#select1" data-toggle="tab">Select</a></li>
-                                  <li><a href="#insert1" data-toggle="tab">Insert</a></li>
-                                  <li><a href="#update1" data-toggle="tab">Update</a></li>
-                                  <li><a href="#delete1" data-toggle="tab">Delete</a></li>
+                                    <li class="active"><a href="#select1" data-toggle="tab">Select</a></li>
+                                    <li><a href="#insert1" data-toggle="tab">Insert</a></li>
+                                    <li><a href="#update1" data-toggle="tab">Update</a></li>
+                                    <li><a href="#delete1" data-toggle="tab">Delete</a></li>
                                 </ul>
                             </div>
 
                             <div class="col-xs-9">
                                 <!-- Tab panes -->
                                 <div class="tab-content">
-<!------------------------------------------------------------------------------------------------------------------------------------>                                    
-                                  <div class="tab-pane fade in active" id="select1">
-                                      
-                                  <form class="form-horizontal" id="profileForm1" role="form">
-                                      <div class="form-group">
-                                          
-                                        <div class="input-group">
-                                            <input type="text"  class="form-control" name="id" placeholder="id">
-                                            <span class="input-group-addon">ID</span>
-                                          </div>
-                                      </div>
-                                      <div class="form-group">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="title" placeholder="title">
-                                            <span class="input-group-addon">Title</span>
-                                          </div>
-                                      </div>
-                                      <div class="form-group">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="year" placeholder="year">
-                                             <span class="input-group-addon">Year</span>
-                                          </div>
-                                      </div>
-                                      <div class="form-group">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="venue" placeholder="venue">
-                                            <span class="input-group-addon">Venue</span>
-                                          </div>
-                                      </div>
-                                      
-                                      <div class="btn-group">
-                                        <button class="btn btn-primary">
+                                    <!------------------------------------------------------------------------------------------------------------------------------------>
+                                    <div class="tab-pane fade in active" id="select1">
+
+                                        <form class="form-horizontal" id="profileForm1" name="article_select"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="id" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="title"
+                                                           placeholder="title">
+                                                    <span class="input-group-addon">Title</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="year"
+                                                           placeholder="year">
+                                                    <span class="input-group-addon">Year</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="venue"
+                                                           placeholder="venue">
+                                                    <span class="input-group-addon">Venue</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" value="Select"
+                                                        onClick="sendFrom(document.getElementById('profileForm1')); return false;">
                                             <span class="glyphicon glyphicon-search">
                                             </span>
-                                            &#160;Select 
-                                          </button>
-                                        <button type="button"  class="btn btn-primary dropdown-toggle"
-                                                data-toggle="dropdown"><span class="caret"></span></button>
-                                        <ul class="dropdown-menu">
-                                        <li>
-                                            <span>&nbsp;&nbsp;</span>
-                                            <label>
-                                                <input checked="" type="radio" name="optradio1">&nbsp;Sort by autors
-                                            </label>
-                                            </li>
-                                        <li><span>&nbsp;&nbsp;</span><label><input type="radio" name="optradio1">&nbsp;Sort by years
-                                            </label></li>
-                                        </ul>
+                                                    &#160;Select
+                                                </button>
+                                                <button type="button" class="btn btn-primary dropdown-toggle"
+                                                        data-toggle="dropdown"><span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <span>&nbsp;&nbsp;</span>
+                                                        <label>
+                                                            <input checked="" type="radio" id="autors" name="sort_by">&nbsp;Sort
+                                                            by autors
+                                                        </label>
+                                                    </li>
+                                                    <li><span>&nbsp;&nbsp;</span><label><input type="radio" id="years"
+                                                                                               name="sort_by">&nbsp;Sort
+                                                        by years
+                                                    </label></li>
+                                                </ul>
+
+                                            </div>
+                                        </form>
 
                                     </div>
-                                    </form>
-                                      
-                                    </div>
-<!------------------------------------------------------------------------------------------------------------------------------------>                                    
-                                    
-                                  <div class="tab-pane" id="insert1">
-                                      
-                                    <form class="form-horizontal" id="profileForm2" role="form">
-                                      <div class="form-group">
-                                        <div class="input-group">
-                                            <input type="text" name="title" class="form-control" placeholder="title">
-                                            <span class="input-group-addon">Title</span>
-                                          </div>
-                                      </div>
-                                      <div class="form-group">
-                                        <div class="input-group">
-                                            <input type="text" name="year" class="form-control" placeholder="year">
-                                             <span class="input-group-addon">Year</span>
-                                          </div>
-                                      </div>
-                                      <div class="form-group">
-                                        <div class="input-group">
-                                            <input type="text" name="venue" class="form-control" placeholder="venue">
-                                            <span class="input-group-addon">Venue</span>
-                                          </div>
-                                      </div>
-                                      
-                                      <div class="btn-group">
-                                        <button class="btn btn-primary">
+                                    <!------------------------------------------------------------------------------------------------------------------------------------>
+                                    <div class="tab-pane" id="insert1">
+
+                                        <form class="form-horizontal" id="profileForm2" name="article_insert"
+                                              role="form">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="title" class="form-control"
+                                                           placeholder="title">
+                                                    <span class="input-group-addon">Title</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="year" class="form-control"
+                                                           placeholder="year">
+                                                    <span class="input-group-addon">Year</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="venue" class="form-control"
+                                                           placeholder="venue">
+                                                    <span class="input-group-addon">Venue</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" value="Insert"
+                                                        onClick="sendFrom(document.getElementById('profileForm2')); return false;">
                                             <span class="glyphicon glyphicon-import">
-                                            </span>&#160;Insert 
-                                          </button>
+                                            </span>&#160;Insert
+                                                </button>
+                                            </div>
+                                        </form>
+
                                     </div>
-                                    </form>
-                                    
-                                    </div>
-                                    
-<!------------------------------------------------------------------------------------------------------------------------------------>                                    
-                                  <div class="tab-pane" id="update1">
-                                    <form class="form-horizontal" id="profileForm3" role="form">
-                                      <div class="form-group">
-                                          
-                                        <div class="input-group">
-                                            <input type="text" name="id" class="form-control"  placeholder="id">
-                                            <span class="input-group-addon">ID</span>
-                                          </div>
-                                      </div>
-                                      <div class="form-group">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="title">
-                                            <span class="input-group-addon">Title</span>
-                                          </div>
-                                      </div>
-                                      <div class="form-group">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="year">
-                                             <span class="input-group-addon">Year</span>
-                                          </div>
-                                      </div>
-                                      <div class="form-group">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="venue">
-                                            <span class="input-group-addon">Venue</span>
-                                          </div>
-                                      </div>
-                                      
-                                      <div class="btn-group">
-                                        <button class="btn btn-primary">
+                                    <!------------------------------------------------------------------------------------------------------------------------------------>
+                                    <div class="tab-pane" id="update1">
+                                        <form class="form-horizontal" id="profileForm3" name="article_update"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" name="id" class="form-control" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="title" class="form-control"
+                                                           placeholder="title">
+                                                    <span class="input-group-addon">Title</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="year" class="form-control"
+                                                           placeholder="year">
+                                                    <span class="input-group-addon">Year</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="venue" class="form-control"
+                                                           placeholder="venue">
+                                                    <span class="input-group-addon">Venue</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" value="Update"
+                                                        onClick="sendFrom(document.getElementById('profileForm3')); return false;">
                                             <span class="glyphicon glyphicon-refresh">
                                             </span>
-                                            &#160;Update 
-                                          </button>
-                                          <button class="btn btn-primary">
+                                                    &#160;Update
+                                                </button>
+                                                <button class="btn btn-primary" value="Show"
+                                                        onClick="sendFrom(document.getElementById('profileForm3')); return false;">
                                             <span class="glyphicon glyphicon-eye-open">
                                             </span>
-                                            &#160;Show
-                                          </button>
+                                                    &#160;Show
+                                                </button>
+                                            </div>
+                                        </form>
+
                                     </div>
-                                    </form>
-                                      
-                                    </div>
-<!------------------------------------------------------------------------------------------------------------------------------------>                                    
-                                  <div class="tab-pane" id="delete1">
-                                    
-                                    <form class="form-horizontal" id="profileForm4" role="form">
-                                      <div class="form-group">
-                                          
-                                        <div class="input-group">
-                                            <input type="text" class="form-control"  placeholder="id" name="id">
-                                            <span class="input-group-addon">ID</span>
-                                          </div>
-                                      </div>
-                                      
-                                      <div class="btn-group">
-                                        <button class="btn btn-danger">
+                                    <!------------------------------------------------------------------------------------------------------------------------------------>
+                                    <div class="tab-pane" id="delete1">
+
+                                        <form class="form-horizontal" id="profileForm4" name="article_delete"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="id" name="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-danger" value="Delete"
+                                                        onClick="sendFrom(document.getElementById('profileForm4')); return false;">
                                             <span class="glyphicon glyphicon-trash">
                                             </span>
-                                            &#160;Delete
-                                          </button>
-                                          <button class="btn btn-primary">
+                                                    &#160;Delete
+                                                </button>
+                                                <button class="btn btn-primary" value="Show"
+                                                        onClick="sendFrom(document.getElementById('profileForm4')); return false;">
                                             <span class="glyphicon glyphicon-eye-open">
                                             </span>
-                                            &#160;Show
-                                          </button>
+                                                    &#160;Show
+                                                </button>
+                                            </div>
+                                        </form>
+
                                     </div>
-                                      </form>
-                                    
+                                </div>
+                            </div>
+
+                        </div>
+                        <!------------------------------------------------------------------------------------------------------------------------------------>
+                        <!------------------------------------------------------------------------------------------------------------------------------------>
+                        <!------------------------------------------------------------------------------------------------------------------------------------>
+                        <div id="panely2" class="tab-pane fade">
+                            <h2>Authors</h2>
+
+                            <div class="col-xs-3"> <!-- required for floating -->
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs tabs-left">
+                                    <li class="active"><a href="#select2" data-toggle="tab">Select</a></li>
+                                    <li><a href="#insert2" data-toggle="tab">Insert</a></li>
+                                    <li><a href="#update2" data-toggle="tab">Update</a></li>
+                                    <li><a href="#delete2" data-toggle="tab">Delete</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="col-xs-9">
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div class="tab-pane fade in active" id="select2">
+
+                                        <form class="form-horizontal" id="author_select" name="author_select"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="id" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="namea"
+                                                           placeholder="name">
+                                                    <span class="input-group-addon">Name</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" value="Select"
+                                                        onClick="sendFrom(document.getElementById('author_select')); return false;">
+                                            <span class="glyphicon glyphicon-search">
+                                            </span>
+                                                    &#160;Select
+                                                </button>
+                                                <button type="button" class="btn btn-primary dropdown-toggle"
+                                                        data-toggle="dropdown"><span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <span>&nbsp;&nbsp;</span>
+                                                        <label>
+                                                            <input checked="" type="radio" id="autors" name="sort_by">&nbsp;Sort
+                                                            by autors
+                                                        </label>
+                                                    </li>
+                                                    <li><span>&nbsp;&nbsp;</span><label><input type="radio" id="years"
+                                                                                               name="sort_by">&nbsp;Sort
+                                                        by years
+                                                    </label></li>
+                                                </ul>
+
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <div class="tab-pane" id="insert2">
+                                        <form class="form-horizontal" id="author_insert" name="author_insert"
+                                              role="form">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="namea" class="form-control"
+                                                           placeholder="name">
+                                                    <span class="input-group-addon">Name</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" value="Insert"
+                                                        onClick="sendFrom(document.getElementById('author_insert')); return false;">
+                                            <span class="glyphicon glyphicon-import">
+                                            </span>&#160;Insert
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane" id="update2">
+                                        <form class="form-horizontal" id="author_update" name="author_update"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" name="id" class="form-control" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="namea" class="form-control"
+                                                           placeholder="name">
+                                                    <span class="input-group-addon">Name</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" value="Update"
+                                                        onClick="sendFrom(document.getElementById('author_update')); return false;">
+                                            <span class="glyphicon glyphicon-refresh">
+                                            </span>
+                                                    &#160;Update
+                                                </button>
+                                                <button class="btn btn-primary" value="Show"
+                                                        onClick="sendFrom(document.getElementById('author_update')); return false;">
+                                            <span class="glyphicon glyphicon-eye-open">
+                                            </span>
+                                                    &#160;Show
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane" id="delete2">
+                                        <form class="form-horizontal" id="author_delete" name="author_delete"
+                                              role="form">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="id" name="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-danger" value="Delete"
+                                                        onClick="sendFrom(document.getElementById('author_delete')); return false;">
+                                            <span class="glyphicon glyphicon-trash">
+                                            </span>
+                                                    &#160;Delete
+                                                </button>
+                                                <button class="btn btn-primary" value="Show"
+                                                        onClick="sendFrom(document.getElementById('author_delete')); return false;">
+                                            <span class="glyphicon glyphicon-eye-open">
+                                            </span>
+                                                    &#160;Show
+                                                </button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                            </div> 
-                          
-                      </div>
-<!------------------------------------------------------------------------------------------------------------------------------------>
-<!------------------------------------------------------------------------------------------------------------------------------------>     <!------------------------------------------------------------------------------------------------------------------------------------>                   
-                      <div id="panely2" class="tab-pane fade">
-                          <h2>Authors</h2>
-                        <div class="col-xs-3"> <!-- required for floating -->
+                            </div>
+
+                        </div>
+                        <!------------------------------------------------------------------------------------------------------------------------------------>
+                        <!------------------------------------------------------------------------------------------------------------------------------------>
+                        <!------------------------------------------------------------------------------------------------------------------------------------>
+                        <div id="panely3" class="tab-pane fade">
+                            <h2>Venues</h2>
+
+                            <div class="col-xs-3"> <!-- required for floating -->
                                 <!-- Nav tabs -->
                                 <ul class="nav nav-tabs tabs-left">
-                                  <li class="active"><a href="#select2" data-toggle="tab">Select</a></li>
-                                  <li><a href="#insert2" data-toggle="tab">Insert</a></li>
-                                  <li><a href="#update2" data-toggle="tab">Update</a></li>
-                                  <li><a href="#delete2" data-toggle="tab">Delete</a></li>
+                                    <li class="active"><a href="#select3" data-toggle="tab">Select</a></li>
+                                    <li><a href="#insert3" data-toggle="tab">Insert</a></li>
+                                    <li><a href="#update3" data-toggle="tab">Update</a></li>
+                                    <li><a href="#delete3" data-toggle="tab">Delete</a></li>
                                 </ul>
                             </div>
 
                             <div class="col-xs-9">
                                 <!-- Tab panes -->
                                 <div class="tab-content">
-                                  <div class="tab-pane fade in active" id="select2">Select2</div>
-                                  <div class="tab-pane" id="insert2">Insert2</div>
-                                  <div class="tab-pane" id="update2">Update2</div>
-                                  <div class="tab-pane" id="delete2">Delete2</div>
+                                    <div class="tab-pane fade in active" id="select3">
+
+                                        <form class="form-horizontal" id="venue_select" name="venue_select"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="id" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="origin"
+                                                           placeholder="origin">
+                                                    <span class="input-group-addon">Origin</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" value="Select"
+                                                        onClick="sendFrom(document.getElementById('venue_select')); return false;">
+                                            <span class="glyphicon glyphicon-search">
+                                            </span>
+                                                    &#160;Select
+                                                </button>
+                                                <button type="button" class="btn btn-primary dropdown-toggle"
+                                                        data-toggle="dropdown"><span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <span>&nbsp;&nbsp;</span>
+                                                        <label>
+                                                            <input checked="" type="radio" id="autors" name="sort_by">&nbsp;Sort
+                                                            by autors
+                                                        </label>
+                                                    </li>
+                                                    <li><span>&nbsp;&nbsp;</span><label><input type="radio" id="years"
+                                                                                               name="sort_by">&nbsp;Sort
+                                                        by years
+                                                    </label></li>
+                                                </ul>
+
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <div class="tab-pane" id="insert3">
+                                        <form class="form-horizontal" id="venue_insert" name="venue_insert"
+                                              role="form">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="origin" class="form-control"
+                                                           placeholder="origin">
+                                                    <span class="input-group-addon">Origin</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" value="Insert"
+                                                        onClick="sendFrom(document.getElementById('venue_insert')); return false;">
+                                            <span class="glyphicon glyphicon-import">
+                                            </span>&#160;Insert
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane" id="update3">
+                                        <form class="form-horizontal" id="venue_update" name="venue_update"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" name="id" class="form-control" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="origin" class="form-control"
+                                                           placeholder="origin">
+                                                    <span class="input-group-addon">Origin</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" value="Update"
+                                                        onClick="sendFrom(document.getElementById('venue_update')); return false;">
+                                            <span class="glyphicon glyphicon-refresh">
+                                            </span>
+                                                    &#160;Update
+                                                </button>
+                                                <button class="btn btn-primary" value="Show"
+                                                        onClick="sendFrom(document.getElementById('venue_update')); return false;">
+                                            <span class="glyphicon glyphicon-eye-open">
+                                            </span>
+                                                    &#160;Show
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane" id="delete3">
+                                        <form class="form-horizontal" id="venue_delete" name="venue_delete"
+                                              role="form">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="id" name="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-danger" value="Delete"
+                                                        onClick="sendFrom(document.getElementById('venue_delete')); return false;">
+                                            <span class="glyphicon glyphicon-trash">
+                                            </span>
+                                                    &#160;Delete
+                                                </button>
+                                                <button class="btn btn-primary" value="Show"
+                                                        onClick="sendFrom(document.getElementById('venue_delete')); return false;">
+                                            <span class="glyphicon glyphicon-eye-open">
+                                            </span>
+                                                    &#160;Show
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div> 
-                          
-                      </div>
-<!------------------------------------------------------------------------------------------------------------------------------------>
-                      <div id="panely3" class="tab-pane fade">
-                          <h2>Venues</h2>
-                        <div class="col-xs-3"> <!-- required for floating -->
+                            </div>
+
+                        </div>
+                        <!------------------------------------------------------------------------------------------------------------------------------------>
+                        <!------------------------------------------------------------------------------------------------------------------------------------>
+                        <!------------------------------------------------------------------------------------------------------------------------------------>
+                        <div id="panely4" class="tab-pane fade">
+                            <h2>Links</h2>
+
+                            <div class="col-xs-3"> <!-- required for floating -->
                                 <!-- Nav tabs -->
                                 <ul class="nav nav-tabs tabs-left">
-                                  <li class="active"><a href="#select3" data-toggle="tab">Select</a></li>
-                                  <li><a href="#insert3" data-toggle="tab">Insert</a></li>
-                                  <li><a href="#update3" data-toggle="tab">Update</a></li>
-                                  <li><a href="#delete3" data-toggle="tab">Delete</a></li>
+                                    <li class="active"><a href="#select4" data-toggle="tab">Select</a></li>
+                                    <li><a href="#insert4" data-toggle="tab">Insert</a></li>
+                                    <li><a href="#delete4" data-toggle="tab">Delete</a></li>
                                 </ul>
                             </div>
 
                             <div class="col-xs-9">
                                 <!-- Tab panes -->
                                 <div class="tab-content">
-                                  <div class="tab-pane fade in active" id="select3">Select3</div>
-                                  <div class="tab-pane" id="insert3">Insert3</div>
-                                  <div class="tab-pane" id="update3">Update3</div>
-                                  <div class="tab-pane" id="delete3">Delete3</div>
+                                    <div class="tab-pane fade in active" id="select4">
+
+                                        <form class="form-horizontal" id="links_select" name="links_select"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="id" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="link_id"
+                                                           placeholder="link_id">
+                                                    <span class="input-group-addon">Link</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" value="Select"
+                                                        onClick="sendFrom(document.getElementById('links_select')); return false;">
+                                            <span class="glyphicon glyphicon-search">
+                                            </span>
+                                                    &#160;Select
+                                                </button>
+                                                <button type="button" class="btn btn-primary dropdown-toggle"
+                                                        data-toggle="dropdown"><span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <span>&nbsp;&nbsp;</span>
+                                                        <label>
+                                                            <input checked="" type="radio" id="autors" name="sort_by">&nbsp;Sort
+                                                            by autors
+                                                        </label>
+                                                    </li>
+                                                    <li><span>&nbsp;&nbsp;</span><label><input type="radio" id="years"
+                                                                                               name="sort_by">&nbsp;Sort
+                                                        by years
+                                                    </label></li>
+                                                </ul>
+
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <div class="tab-pane" id="insert4">
+                                        <form class="form-horizontal" id="links_insert" name="links_insert"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="id" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="link_id" class="form-control"
+                                                           placeholder="link_id">
+                                                    <span class="input-group-addon">Link</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" value="Insert"
+                                                        onClick="sendFrom(document.getElementById('links_insert')); return false;">
+                                            <span class="glyphicon glyphicon-import">
+                                            </span>&#160;Insert
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane" id="delete4">
+                                        <form class="form-horizontal" id="links_delete" name="links_delete"
+                                              role="form">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="id" name="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="link_id"
+                                                           name="link_id">
+                                                    <span class="input-group-addon">Link</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-danger" value="Delete"
+                                                        onClick="sendFrom(document.getElementById('links_delete')); return false;">
+                                            <span class="glyphicon glyphicon-trash">
+                                            </span>
+                                                    &#160;Delete
+                                                </button>
+                                                <button class="btn btn-primary" value="Show"
+                                                        onClick="sendFrom(document.getElementById('links_delete')); return false;">
+                                            <span class="glyphicon glyphicon-eye-open">
+                                            </span>
+                                                    &#160;Show
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div> 
-                          
-                      </div>
-<!------------------------------------------------------------------------------------------------------------------------------------>
-                      <div id="panely4" class="tab-pane fade">
-                          <h2>Links</h2>
-                        <div class="col-xs-3"> <!-- required for floating -->
-                                <!-- Nav tabs -->
-                                <ul class="nav nav-tabs tabs-left">
-                                  <li class="active"><a href="#select4" data-toggle="tab">Select</a></li>
-                                  <li><a href="#insert4" data-toggle="tab">Insert</a></li>
-                                  <li><a href="#update4" data-toggle="tab">Update</a></li>
-                                  <li><a href="#delete4" data-toggle="tab">Delete</a></li>
-                                </ul>
                             </div>
 
-                            <div class="col-xs-9">
-                                <!-- Tab panes -->
-                                <div class="tab-content">
-                                  <div class="tab-pane fade in active" id="select4">Select4</div>
-                                  <div class="tab-pane" id="insert4">Insert4</div>
-                                  <div class="tab-pane" id="update4">Update4</div>
-                                  <div class="tab-pane" id="delete4">Delete4</div>
-                                </div>
-                            </div> 
-                          
-                      </div>
+                        </div>
                     </div>
-<!------------------------------------------------------------------------------------------------------------------------------------>
+                    <!------------------------------------------------------------------------------------------------------------------------------------>
                     <div class="row">
                     </div>
 
                 </div>
-                
-<!------------------------------------------------------------------------------------------------------------------------------------>
+
+                <!------------------------------------------------------------------------------------------------------------------------------------>
                 <div class="tab-pane" id="tab2">
                     <h2>SQL query console</h2>
 
-                    <textarea id="textarea" class="control-group error" cols="130" rows="10"></textarea>
+                    <form class="form-horizontal" id="SQLQueryexecutor" name="SQLQueryexecutor"
+                          role="form">
+                        <textarea id="textarea" name="SQLquery" placeholder="Write your SQL query here..."
+                                  class="form-control" cols="130" rows="10"></textarea>
 
-                    <div class="btn-group">
-                        <button class="btn btn-primary">Run <span class="glyphicon glyphicon-play"></span></button>
-                        <button type="button" class="btn btn-primary dropdown-toggle"
-                                data-toggle="dropdown"><span class="caret"></span></button>
-                        <ul class="dropdown-menu">
-                            <li><span>&nbsp;&nbsp;</span>
-                                <label><input checked="" type="radio" name="optradio1">&nbsp;Sort by autors</label>
-                            </li>
-                            <li><span>&nbsp;&nbsp;</span><label><input type="radio" name="optradio1">&nbsp;Sort by years</label></li>
-                        </ul>
+                        <div class="btn-group">
+                            <button class="btn btn-primary" value="Run"
+                                    onClick="sendFrom(document.getElementById('SQLQueryexecutor')); return false;">Run
+                                <span class="glyphicon glyphicon-play"></span></button>
+                            <button type="button" class="btn btn-primary dropdown-toggle"
+                                    data-toggle="dropdown"><span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><span>&nbsp;&nbsp;</span>
+                                    <label><input checked="" type="radio" id="authors" name="sort_by">&nbsp;Sort by
+                                        autors</label>
+                                </li>
+                                <li><span>&nbsp;&nbsp;</span><label><input type="radio" id="years" name="sort_by">&nbsp;Sort
+                                    by years</label></li>
+                            </ul>
+                        </div>
+                    </form>
 
-                    </div>
 
                 </div>
 
-<!------------------------------------------------------------------------------------------------------------------------------------>
+                <!------------------------------------------------------------------------------------------------------------------------------------>
                 <div class="tab-pane" id="tab3">
 
                     <h2>Graphics</h2>
+
                     <p>FYODOR ETO TY?
-                    PSHHH , PSHHH , PSHHH! NICHEGO NE SLISHNO! </p>
+                        PSHHH , PSHHH , PSHHH! NICHEGO NE SLISHNO! </p>
 
 
                 </div>
-<!------------------------------------------------------------------------------------------------------------------------------------>
+                <!------------------------------------------------------------------------------------------------------------------------------------>
 
-                
+
                 <div class="row">
 
                     <div class="col-md-2 col-md-offset-5"></div>
 
                     <h2 class="sub-header"> Result</h2>
 
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>id</th>
-                                <th>title</th>
-                                <th>year</th>
-                                <th>venue_id</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
+                    <div id="forin">
 
-                                <td>14151</td>
-                                <td>Adaptive Image Content-Based Exposure Control for Scanning Applications in Radiography.</td>
-                                <td>2005</td>
-                                <td>211</td>
-                            </tr>
-                            <tr>
-                                <td>19691</td>
-                                <td>A Brochette of Socially Interactive Robots.</td>
-                                <td>2007</td>
-                                <td>274</td>
-                            </tr>
-                            <tr>
-                                <td>36445</td>
-                                <td>Wireless Sensor Networks for Home Health Care.</td>
-                                <td>2007</td>
-                                <td>367</td>
-                            </tr>
-                            <tr>
-                                <td>52829</td>
-                                <td>Key features of the design methodology enabling a multi-core SoC implementation of a first-generation CELL processor. </td>
-                                <td>2006</td>
-                                <td>495</td>
-                            </tr>
-                            <tr>
-                                <td>55611</td>
-                                <td>The EO-1 Autonomous Science Agent.</td>
-                                <td>2004</td>
-                                <td>509</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <!--<div id="myGrid" style="width: 100%;height: 500px;" ></div>-->
+
                     </div>
+
+                    <!--<p id="navigation" class="text-center navigate navigate_bottom"></p>-->
                 </div>
-<!------------------------------------------------------------------------------------------------------------------------------------>
+
+
+                <!--<script type="text/javascript">-->
+                <!--$('.navigate_top,.navigate_bottom').bootpag({-->
+                <!--total: 20,-->
+                <!--page: 2,-->
+                <!--maxVisible: 5,-->
+                <!--leaps: true,-->
+                <!--firstLastUse: true,-->
+                <!--first: '←',-->
+                <!--last: '→',-->
+                <!--wrapClass: 'pagination',-->
+                <!--activeClass: 'active',-->
+                <!--disabledClass: 'disabled',-->
+                <!--nextClass: 'next',-->
+                <!--prevClass: 'prev',-->
+                <!--lastClass: 'last',-->
+                <!--firstClass: 'first'-->
+                <!--}).on("page", function(event, num){-->
+                <!--$(".content4").html("Page " + num); // or some ajax content loading...-->
+                <!--});-->
+                <!--</script>-->
+                <script src="static/js/jquery.event.drag-2.2.js"></script>
+                <script src="static/js/slick.core.js"></script>
+                <script src="static/js/slick.grid.js"></script>
+                <!---------------------------------->
+
+                <!--<script>-->
+                <!--var grid;-->
+                <!--var columns = [-->
+                <!--{id: "title", name: "Title", field: "title"},-->
+                <!--{id: "duration", name: "Duration", field: "duration"},-->
+                <!--{id: "%", name: "% Complete", field: "percentComplete"},-->
+                <!--{id: "start", name: "Start", field: "start"},-->
+                <!--{id: "finish", name: "Finish", field: "finish"},-->
+                <!--{id: "effort-driven", name: "Effort Driven", field: "effortDriven"}-->
+                <!--];-->
+                <!--var options = {-->
+                <!--enableCellNavigation: true,-->
+                <!--enableColumnReorder: false,-->
+                <!--fullWidthRows: true,-->
+                <!--syncColumnCellResize: true-->
+                <!--};-->
+                <!--$(function () {-->
+                <!--var data = [];-->
+                <!--for (var i = 0; i < 500; i++) {-->
+                <!--data[i] = {-->
+                <!--title: "Task " + i,-->
+                <!--duration: "5 days",-->
+                <!--percentComplete: Math.round(Math.random() * 100),-->
+                <!--start: "01/01/2009",-->
+                <!--finish: "01/05/2009",-->
+                <!--effortDriven: (i % 5 == 0)-->
+                <!--};-->
+                <!--}-->
+                <!--grid = new Slick.Grid("#myGrid", data, columns, options);-->
+                <!--})-->
+                <!--</script>-->
+
 
             </div>
+            <!------------------------------------------------------------------------------------------------------------------------------------>
+
         </div>
-
-
     </div>
+
+
+</div>
 </div>
 
 
@@ -503,161 +1023,145 @@
         $("#wrapper").toggleClass("toggled");
     });
 </script>
-    
+
 <!--*********************************************************************************************************************-->
 <script language="JavaScript" type="text/javascript">
-            $(document).ready(function() {
-            $('#profileForm1').formValidation({
-                framework: 'bootstrap',
-                icon: {
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {
-                    id: {
-                        validators: {
-                            regexp: {
-                                regexp: /^\d+$/,
-                                message: 'The id can only consist of integers'
-                            }
-                        }
-                    },
-                    year: {
-                        validators: {
-                            regexp: {
-                                regexp: /^\d+$/,
-                                message: 'The year can only consist of integers'
-                            },
-                            between: {
-                                min: 1900,
-                                max: 2015,
-                                message: 'The year must be between 1900 and 2015'
-                            }
-                        }
-                    },
-                    title: {
-                        validators: {
-                            regexp: {
-                                regexp: /^\d+$/,
-                                message: 'The year can only consist of integers'
-                            }
-                        }
-                    },
-                    venue: {
-                        validators: {
-                            regexp: {
-                                regexp: /^\d+$/,
-                                message: 'The year can only consist of integers'
-                            }
+    $(document).ready(function () {
+        $('#profileForm1').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
                         }
                     }
+                },
+                year: {
+                    validators: {
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The year can only consist of integers'
+                        },
+                        between: {
+                            min: 1900,
+                            max: 2015,
+                            message: 'The year must be between 1900 and 2015'
+                        }
+                    }
+                },
+                title: {
+                    validators: {}
+                },
+                venue: {
+                    validators: {}
                 }
-            });
+            }
         });
-    </script>
-<!--*********************************************************************************************************************-->    
+    });
+</script>
+<!--*********************************************************************************************************************-->
 <script language="JavaScript" type="text/javascript">
-            $(document).ready(function() {
-            $('#profileForm2').formValidation({
-                framework: 'bootstrap',
-                icon: {
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {
-                    year: {
-                        validators: {
-                            notEmpty: {
-                                message: 'The year is required'
-                            },
-                            regexp: {
-                                regexp: /^\d+$/,
-                                message: 'The year can only consist of integers'
-                            }
-                        }
-                    },
-                    title: {
-                        validators: {
-                            notEmpty: {
-                                message: 'The title is required'
-                            },
-                            regexp: {
-                                regexp: /^\d+$/,
-                                message: 'The title can only consist of integers'
-                            }
-                        }
-                    },
-                    venue: {
-                        validators: {
-                            notEmpty: {
-                                message: 'The venue is required'
-                            },
-                            regexp: {
-                                regexp: /^\d+$/,
-                                message: 'The venue can only consist of integers'
-                            }
+    $(document).ready(function () {
+        $('#profileForm2').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                year: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The year is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The year can only consist of integers'
                         }
                     }
+                },
+                title: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The title is required'
+                        },
+
+                    }
+                },
+                venue: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The venue is required'
+                        },
+
+                    }
                 }
-            });
+            }
         });
-    </script>
-    
-<!--*********************************************************************************************************************-->    
+    });
+</script>
+
+<!--*********************************************************************************************************************-->
 <script language="JavaScript" type="text/javascript">
-            $(document).ready(function() {
-            $('#profileForm3').formValidation({
-                framework: 'bootstrap',
-                icon: {
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {
-                    id: {
-                        validators: {
-                            notEmpty: {
-                                message: 'The id is required'
-                            },
-                            regexp: {
-                                regexp: /^\d+$/,
-                                message: 'The id can only consist of integers'
-                            }
+    $(document).ready(function () {
+        $('#profileForm3').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
                         }
                     }
                 }
-            });
+            }
         });
-    </script>
-    
-<!--*********************************************************************************************************************-->    
+    });
+</script>
+
+<!--*********************************************************************************************************************-->
 <script language="JavaScript" type="text/javascript">
-            $(document).ready(function() {
-            $('#profileForm4').formValidation({
-                framework: 'bootstrap',
-                icon: {
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {
-                    id: {
-                        validators: {
-                            notEmpty: {
-                                message: 'The id is required'
-                            },
-                            regexp: {
-                                regexp: /^\d+$/,
-                                message: 'The id can only consist of integers'
-                            }
+    $(document).ready(function () {
+        $('#profileForm4').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
                         }
                     }
                 }
-            });
+            }
         });
-    </script>
-    
+    });
+</script>
+
 </body>
 </html>

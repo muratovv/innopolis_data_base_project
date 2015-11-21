@@ -52,7 +52,55 @@ def wrong_auth():
 
 
 #####
-json_response = {"req": [['a'], ['b'], ['c']]}
+items = {'req': [
+    [
+        'id',
+        'title',
+        'year',
+        'venue'
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+    ],
+    [
+        'alpha',
+        'betta',
+        'gamma',
+        'delta',
+        'epsilon',
+        'dzeta',
+        'eta',
+        'teta'
+    ],
+    [
+        1999,
+        1999,
+        1999,
+        1999,
+        1999,
+        1999,
+        1999,
+        1999
+    ],
+    [
+        'somewhere',
+        'somewhere',
+        'somewhere',
+        'somewhere',
+        'somewhere',
+        'somewhere',
+        'somewhere',
+        'somewhere'
+    ]
+]
+}
 
 
 @route('/test')
