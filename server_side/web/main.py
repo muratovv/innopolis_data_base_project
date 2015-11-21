@@ -150,7 +150,7 @@ def message_request(request_string, message):
 
 
 def prepare_request(request_dict=None):
-    excepted_list = ['title', 'venue', 'name', 'origin']
+    excepted_list = ['title', 'venue_str', 'name', 'origin']
     if not request_dict:
         request_dict = {}
     new_dict = {}

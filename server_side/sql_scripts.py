@@ -67,13 +67,15 @@ INSERT INTO public.articles
   SELECT {0}, {1};""".format(source, dest)
 
     @staticmethod
-    def generate_where(where_tuples=None):
+    def generate_dict(where_tuples=None, start_word="WHERE ", excepted_like_strings=None, separator=' AND '):
+        if not excepted_like_strings:
+            excepted_like_strings = []
         if not where_tuples:
             where_tuples = {}
         if len(where_tuples) == 0:
             return ""
         else:
-            request = "WHERE "
+            request = start_word
             lst = []
             for key, value in where_tuples.items():
                 if value is not None and value != "":
@@ -81,11 +83,14 @@ INSERT INTO public.articles
                     lst.append(temp)
             for i in range(len(lst)):
                 if isinstance(lst[i][1], str):
-                    request += lst[i][0] + " LIKE " + "'%{0}%'".format(lst[i][1])
+                    if lst[i][0] not in excepted_like_strings:
+                        request += lst[i][0] + " LIKE " + "'%{0}%'".format(lst[i][1])
+                    else:
+                        request += lst[i][0] + " = " + "'{0}'".format(lst[i][1])
                 else:
                     request += lst[i][0] + " = " + "{0}".format(lst[i][1])
                 if i < len(lst) - 1:
-                    request += " AND "
+                    request += separator
             if len(lst) > 0:
                 return request
             else:
@@ -127,7 +132,7 @@ FROM {1}
 {5}
 LIMIT {3}
 OFFSET {4};
-        """.format(what_str, from_str, SQLGenerator.generate_where(where_dict), limit_int, skip_int,
+        """.format(what_str, from_str, SQLGenerator.generate_dict(where_dict), limit_int, skip_int,
                    SQLGenerator.generate_odrderby(ordery_dict))
 
     @staticmethod
@@ -136,6 +141,13 @@ OFFSET {4};
 INSERT INTO {0}({1})
   VALUES ({2});""".format(db_str, SQLGenerator.generate_enumerate(what_lst),
                           SQLGenerator.generate_enumerate(values_lst, True))
+
+    @staticmethod
+    def generate_update(db_str, set_lst, id_pair, excepted_like_lst=[]):
+        return """
+UPDATE {0} SET {1}
+WHERE {2} = {3};""".format(db_str, SQLGenerator.generate_dict(set_lst, "", excepted_like_lst, ', '), id_pair[0],
+                           id_pair[1])
 
 
 def is_int(s):
@@ -148,4 +160,4 @@ def is_int(s):
 
 if __name__ == '__main__':
     print("main")
-    print(SQLGenerator.generate_insert("articles", ['title', 'year', 'venueid'], ['qwerty', 2000, 177]))
+    print(SQLGenerator.generate_update('films', {'kind': 'dramatic'}, ('id', 123), ['kind']))
