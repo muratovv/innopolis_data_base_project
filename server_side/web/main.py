@@ -53,13 +53,13 @@ def wrong_auth():
 
 #####
 items = {'req': [
-    [
+    (
         'id',
         'title',
         'year',
         'venue'
-    ],
-    [
+    ),
+    (
         1,
         2,
         3,
@@ -68,8 +68,8 @@ items = {'req': [
         6,
         7,
         8
-    ],
-    [
+    ),
+    (
         'alpha',
         'betta',
         'gamma',
@@ -78,7 +78,7 @@ items = {'req': [
         'dzeta',
         'eta',
         'teta'
-    ],
+    ),
     [
         1999,
         1999,
@@ -110,31 +110,33 @@ def jsontest():
 
 @post('/getallitems.json')
 def shop_aj_getallitems():
-    req = prepare_request(request.query)
+    req = dict(prepare_request(request.query))
     print(req)
     return parse_request(req)
 
 
 def parse_request(request_dict=None):
+    print('Parse request')
     if not request_dict:
         request_dict = {}
-    try:
-        if request_dict.get('fromname', None):
-            return table_request(request_dict)
-        elif request_dict.get('code', None):
-            return console_request(request_dict)
-        else:
-            return message_request(request_dict, 'Wrong request')
-    except Exception as ex:
-        return message_request(request_dict, str(ex))
+    if request_dict.get('formname', None):
+        return table_request(request_dict)
+    elif request_dict.get('code', None):
+        return console_request(request_dict)
+    else:
+        return message_request(request_dict, 'Wrong request')
 
 
 def table_request(request_dict=None):
     if not request_dict:
         request_dict = {}
-    table_operation = request_dict.get('fromname').split('_')
-    table_name = table_operation[0]
-    operation_name = table_operation[1]
+    table_operation = request_dict['formname'].split('_')
+    del request_dict['formname']
+    request_dict['table'] = table_operation[0]
+    request_dict['operation'] = table_operation[1]
+
+    from server_side.web.table_request import run_request
+    return run_request(request_dict)
 
 
 def console_request(request_dict=None):
@@ -148,14 +150,16 @@ def message_request(request_string, message):
 
 
 def prepare_request(request_dict=None):
+    excepted_list = ['title', 'venue', 'name', 'origin']
     if not request_dict:
         request_dict = {}
     new_dict = {}
-    for key, item in request_dict:
+    for key, item in request_dict.items():
         new_dict[key.lower()] = item.lower()
         try:
-            value = int(item)
-            request_dict[key] = value
+            if key.lower() not in excepted_list:
+                value = int(item)
+                request_dict[key] = value
         except ValueError:
             pass
     return request_dict
