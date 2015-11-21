@@ -52,7 +52,7 @@ def wrong_auth():
 
 
 #####
-items = {1: 'first item', 2: 'second item'}
+json_response = {"req": [['a'], ['b'], ['c']]}
 
 
 @route('/test')
@@ -62,9 +62,55 @@ def jsontest():
 
 @post('/getallitems.json')
 def shop_aj_getallitems():
-    for item in request.query:
-        print(item, request.query[item])
-    return items
+    req = prepare_request(request.query)
+    print(req)
+    return parse_request(req)
+
+
+def parse_request(request_dict=None):
+    if not request_dict:
+        request_dict = {}
+    try:
+        if request_dict.get('fromname', None):
+            return table_request(request_dict)
+        elif request_dict.get('code', None):
+            return console_request(request_dict)
+        else:
+            return message_request(request_dict, 'Wrong request')
+    except Exception as ex:
+        return message_request(request_dict, str(ex))
+
+
+def table_request(request_dict=None):
+    if not request_dict:
+        request_dict = {}
+    table_operation = request_dict.get('fromname').split('_')
+    table_name = table_operation[0]
+    operation_name = table_operation[1]
+
+
+def console_request(request_dict=None):
+    if not request_dict:
+        request_dict = {}
+    return {}
+
+
+def message_request(request_string, message):
+    return {'message': message}
+
+
+def prepare_request(request_dict=None):
+    if not request_dict:
+        request_dict = {}
+    new_dict = {}
+    for key, item in request_dict:
+        new_dict[key.lower()] = item.lower()
+        try:
+            value = int(item)
+            request_dict[key] = value
+        except ValueError:
+            pass
+    return request_dict
 
 
 #####

@@ -1,3 +1,4 @@
+# noinspection SqlDialectInspection,SqlNoDataSourceInspection
 class SQLGenerator:
     @staticmethod
     def insertIntoVenues(str_):
@@ -7,9 +8,8 @@ INSERT INTO public.venues
 SELECT '{0}'
 WHERE
     NOT EXISTS (
-        SELECT public.venues.origin FROM public.venues WHERE venues.origin = '{0}'
-    );
-    """.format(str_)
+        SELECT public.venues.origin FROM public.venues WHERE venues.origin = '{0}');
+              """.format(str_)
 
     @staticmethod
     def getVenueId(str_):
@@ -65,3 +65,36 @@ INSERT INTO public.articles
         return """INSERT INTO public.links
 (source_id, dest_id)
   SELECT {0}, {1};""".format(source, dest)
+
+    @staticmethod
+    def select_from_articles(where_tuples={}, get_next=10, skip=0):
+        return """
+SELECT id, title, year, origin
+FROM articles NATURAL JOIN venues
+{0}
+LIMIT {1}
+OFFSET {2};""".format(SQLGenerator.generate_where(where_tuples), get_next, skip)
+
+    @staticmethod
+    def generate_where(where_tuples={}):
+        if len(where_tuples) == 0:
+            return ""
+        else:
+            request = "WHERE "
+            lst = []
+            for key, value in where_tuples.items():
+                temp = [key, value]
+                lst.append(temp)
+            for i in range(len(lst)):
+                if isinstance(lst[i][1], str):
+                    request += lst[i][0] + " LIKE " + "%{0}%".format(lst[i][1])
+                else:
+                    request += lst[i][0] + " = " + "{0}".format(lst[i][1])
+                if i < len(lst) - 1:
+                    request += " AND "
+            return request
+
+
+if __name__ == '__main__':
+    print("main")
+    print(SQLGenerator.select_from_articles({'origin': "database"}))
