@@ -79,8 +79,7 @@ items = {'req': [('id', 'title', 'year', 'venue'), (42, 'Overview of the Iris DB
                      'Logic Programming: Formal Methods and Practical Applications'),
                  (60, 'The Commercial INGRES Epilogue.', 1986, 'Methodology and Tools for Data Base Design'), (
                      61, 'Design of Relational Systems (Introduction to Section 1).', 1986,
-                     'Handbook of Theoretical Computer Science, Volume A: Algorithms and Complexity (A)'),
-                 (62, 'The Commercial INGRES Epilogue.', 1986, 'Methodology and Tools for Data Base Design')]}
+                     'Handbook of Theoretical Computer Science, Volume A: Algorithms and Complexity (A)')]}
 
 @route('/test')
 def jsontest():
