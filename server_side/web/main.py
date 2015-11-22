@@ -111,12 +111,10 @@ def jsontest():
 @post('/getallitems.json')
 def shop_aj_getallitems():
     req = dict(prepare_request(request.query))
-    print(req)
     return parse_request(req)
 
 
 def parse_request(request_dict=None):
-    print('Parse request')
     if not request_dict:
         request_dict = {}
     if request_dict.get('formname', None):

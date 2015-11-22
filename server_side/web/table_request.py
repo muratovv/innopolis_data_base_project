@@ -1,5 +1,4 @@
 import psycopg2
-
 from server_side.sql_scripts import SQLGenerator
 
 conn = psycopg2.connect("dbname=postgres user=Muratov")
@@ -65,14 +64,35 @@ def run_request(query=None):
 
     if query['operation'] == 'update':
 
-        if query['table'] == 'article':
+        if query['table'] == 'article' and query['button'] != "Show":
             db_request = Update.articles(query)
 
-        if query['table'] == 'author':
+        if query['table'] == 'author' and query['button'] != "Show":
             db_request = Update.authors(query)
 
-        if query['table'] == 'venue':
+        if query['table'] == 'venue' and query['button'] != "Show":
             db_request = Update.venues(query)
+
+        if query['button'] == "Show":
+            title = ""
+            db_request = ""
+
+            if query['table'] == 'article':
+                title = [('id', 'title', 'year', 'venue')]
+                db_request = Select.articles_row(query)
+
+            if query['table'] == 'author':
+                title = [('id', 'name')]
+                db_request = Select.authors(query)
+
+            if query['table'] == 'venue':
+                title = [('id', 'origin')]
+                db_request = Select.venues(query)
+
+            cur.execute(db_request)
+            db_response = {"req": title + cur.fetchall()}
+            print(db_response)
+            return db_response
 
         print("<<SQL REQUEST: \n" + str(db_request) + " >>")
 
@@ -88,17 +108,42 @@ def run_request(query=None):
 
     if query['operation'] == 'delete':
 
-        if query['table'] == 'article':
+        if query['table'] == 'article' and query['button'] != "Show":
             db_request = Delete.articles(query)
 
-        if query['table'] == 'author':
+        if query['table'] == 'author' and query['button'] != "Show":
             db_request = Delete.authors(query)
 
-        if query['table'] == 'venue':
+        if query['table'] == 'venue' and query['button'] != "Show":
             db_request = Delete.venues(query)
 
-        if query['table'] == 'links':
+        if query['table'] == 'links' and query['button'] != "Show":
             db_request = Delete.links(query)
+
+        if query['button'] == "Show":
+            title = ""
+            db_request = ""
+
+            if query['table'] == 'article':
+                title = [('id', 'title', 'year', 'venue')]
+                db_request = Select.articles_row(query)
+
+            if query['table'] == 'author':
+                title = [('id', 'name')]
+                db_request = Select.authors(query)
+
+            if query['table'] == 'venue':
+                title = [('id', 'origin')]
+                db_request = Select.venues(query)
+
+            if query['table'] == 'links':
+                db_request = Select.links(query)
+                title = [('id', 'reference')]
+
+            cur.execute(db_request)
+            db_response = {"req": title + cur.fetchall()}
+            print(db_response)
+            return db_response
 
         print("<<SQL REQUEST: \n" + str(db_request) + " >>")
 
@@ -114,11 +159,22 @@ def run_request(query=None):
 
 class Select:
     @staticmethod
+    def articles_row(query=None):
+        if not query:
+            query = {}
+        return SQLGenerator.generate_select("id, title, year, venueid",
+                                            "articles",
+                                            {'articles.id': query['id'], 'title': query['title'], 'year': query['year'],
+                                             'venueid': query['venue'], },
+                                            query['page_size'], compute_offset(query['page'], query['page_size']), {})
+
+    @staticmethod
     def articles(query=None):
         if not query:
             query = {}
-        return SQLGenerator.generate_select("id, title, year, origin", "articles NATURAL JOIN venues",
-                                            {'id': query['id'], 'title': query['title'], 'year': query['year'],
+        return SQLGenerator.generate_select("articles.id, title, year, origin",
+                                            "articles FULL JOIN venues ON articles.venueid = venues.id",
+                                            {'articles.id': query['id'], 'title': query['title'], 'year': query['year'],
                                              'venue': query['venue_str'], },
                                             query['page_size'], compute_offset(query['page'], query['page_size']), {})
 
