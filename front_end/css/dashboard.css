@@ -247,3 +247,24 @@ body {
     min-width:80px;
     text-align:left;
 }
+
+button:active, button:focus {
+    outline: none !important;
+}
+
+button::-moz-focus-inner {
+    border: 0 !important;
+}
+
+.navigate {
+    position: relative;
+    flow: right;
+}
+
+.back-to-top {
+    cursor: pointer;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+}

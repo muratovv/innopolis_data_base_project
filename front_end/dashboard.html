@@ -1,304 +1,320 @@
 <!DOCTYPE html>
 <html lang="en">
-<</he>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-<meta name="description" content="">
-<meta name="author" content="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<title>DMD project</title>
+    <title>DMD project</title>
 
-<!-- Bootstrap core CSS -->
-<link href="static/css/bootstrap.min.css" rel="stylesheet">
-<link href="static/css/dashboard.css" rel="stylesheet">
-<link href="static/css/bootstrap.vertical-tabs.css" rel="stylesheet">
-<link rel="stylesheet" href="static/formvalidation/dist/css/formValidation.min.css">
+    <!-- Bootstrap core CSS -->
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/dashboard.css" rel="stylesheet">
+    <link href="static/css/bootstrap.vertical-tabs.css" rel="stylesheet">
+    <link href="static/css/buttons.css" rel="stylesheet">
 
-<script src="static/js/jquery-1.11.3.min.js"></script>
-<script src="static/js/bootstrap.min.js"></script>
-<script src="static/formvalidation/dist/js/formValidation.js"></script>
-<script src="static/formvalidation/dist/js/framework/bootstrap.min.js"></script>
 
-<script language="JavaScript" type="text/javascript">
-    function flexibleTextarea(b) {
-        var a = document.getElementById(b) || b;
-        if (a) {
-            a.style.overflow = "hidden";
-            var e = a.rows = a.rows > 0 ? a.rows : 2;
-            b = a.cols = a.cols > 0 ? a.cols : 20;
-            var g = RegExp("([^\r\n]{" + b + "})([^\r\n])"),
-                    f = RegExp("[^\n]{" + b + "}\n?$|[^\n]{0," + b + "}\n");
-            a.onkeyup = a.onkeydown = function () {
-                a.value = a.value.replace(g, "$1\r\n$2");
-                for (var c = 0, d = a.value; d.search(f) >= 0;) {
+    <script src="static/js/jquery-1.11.3.min.js"></script>
+    <script src="static/js/jquery.jscroll.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="static/formvalidation/dist/js/formValidation.js"></script>
+    <script src="static/formvalidation/dist/js/framework/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/jquery.bootpag.min.js"></script>
+
+    <script language="JavaScript" type="text/javascript">
+        function flexibleTextarea(b) {
+            var a = document.getElementById(b) || b;
+            if (a) {
+                a.style.overflow = "hidden";
+                var e = a.rows = a.rows > 0 ? a.rows : 2;
+                b = a.cols = a.cols > 0 ? a.cols : 20;
+                var g = RegExp("([^\r\n]{" + b + "})([^\r\n])"),
+                        f = RegExp("[^\n]{" + b + "}\n?$|[^\n]{0," + b + "}\n");
+                a.onkeyup = a.onkeydown = function () {
+                    a.value = a.value.replace(g, "$1\r\n$2");
+                    for (var c = 0, d = a.value; d.search(f) >= 0;) {
+                        c++;
+                        d = d.replace(f, "")
+                    }
                     c++;
-                    d = d.replace(f, "")
+                    if (c < e) c = e;
+                    a.rows = c
                 }
-                c++;
-                if (c < e) c = e;
-                a.rows = c
             }
         }
-    }
-    ;
-    window.onload = function () {
-        flexibleTextarea('textarea');
-    }
-</script>
+        ;
+        window.onload = function () {
+            flexibleTextarea('textarea');
+        }
+    </script>
 
-<script language="JavaScript" type="text/javascript">
-    function toggleText(button_id) {
-        if (button_id == "B1") {
-            document.getElementById("but1").firstChild.data = "Select";
+    <script language="JavaScript" type="text/javascript">
+        function toggleText(button_id) {
+            if (button_id == "B1") {
+                document.getElementById("but1").firstChild.data = "Select";
+            }
+            else if (button_id == "B2") {
+                document.getElementById('but1').firstChild.data = "Insert";
+            }
+            else if (button_id == "B3") {
+                document.getElementById('but1').firstChild.data = "Delete";
+            }
+            else if (button_id == "B4") {
+                document.getElementById('but1').firstChild.data = "Update";
+            }
+            else if (button_id == "B5") {
+                document.getElementById('but1').firstChild.data = "Related";
+            }
+            else if (button_id == "B6") {
+                document.getElementById('but1').firstChild.data = "Related";
+            }
         }
-        else if (button_id == "B2") {
-            document.getElementById('but1').firstChild.data = "Insert";
-        }
-        else if (button_id == "B3") {
-            document.getElementById('but1').firstChild.data = "Delete";
-        }
-        else if (button_id == "B4") {
-            document.getElementById('but1').firstChild.data = "Update";
-        }
-        else if (button_id == "B5") {
-            document.getElementById('but1').firstChild.data = "Related";
-        }
-        else if (button_id == "B6") {
-            document.getElementById('but1').firstChild.data = "Related";
-        }
-    }
-</script>
+    </script>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-            //Получить название активной вкладки
-            var activeTab = $(e.target).text();
-            // Получить название предыдущей активной вкладки
-            var previousTab = $(e.relatedTarget).text();
-            $(".tab-active span").html(activeTab);
-            $(".tab-previous span").html(previousTab);
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                //Получить название активной вкладки
+                var activeTab = $(e.target).text();
+                // Получить название предыдущей активной вкладки
+                var previousTab = $(e.relatedTarget).text();
+                $(".tab-active span").html(activeTab);
+                $(".tab-previous span").html(previousTab);
+            });
         });
-    });
-</script>
+    </script>
 
-<script language="JavaScript" type="text/javascript">
-    function flexibleTextarea(b) {
-        var a = document.getElementById(b) || b;
-        if (a) {
-            a.style.overflow = "hidden";
-            var e = a.rows = a.rows > 0 ? a.rows : 2;
-            b = a.cols = a.cols > 0 ? a.cols : 20;
-            var g = RegExp("([^\r\n]{" + b + "})([^\r\n])"),
-                    f = RegExp("[^\n]{" + b + "}\n?$|[^\n]{0," + b + "}\n");
-            a.onkeyup = a.onkeydown = function () {
-                a.value = a.value.replace(g, "$1\r\n$2");
-                for (var c = 0, d = a.value; d.search(f) >= 0;) {
-                    c++;
-                    d = d.replace(f, "")
+    <script type="text/javascript">
+        var xmlhttp;
+        var urlscroll;
+        var number = 0;
+        var numberOfCorteges = 0;
+
+        // Are we using a modern browser or ...
+        if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+
+        function createTable(jsonObj) {
+            var output = "<div class=\"table-responsive\">" +
+                    "<table id = \"tableOfData\" class=\"table table-striped\">" + "</table>";
+            document.getElementById("forin").innerHTML = output;
+            numberOfCorteges = 0;
+            isHeadAdded = false;
+        }
+
+        function addRow(tableID, jsonObj) {
+
+            var row;
+
+            var table = document.getElementById(tableID);
+            for (var i = 1; i < jsonObj['req'].length; i++) {
+                row = table.insertRow(numberOfCorteges + 1);
+                for (var j = 0; j < jsonObj['req'][0].length; j++) {
+                    row.insertCell(j).innerHTML = jsonObj['req'][i][j];
                 }
-                c++;
-                if (c < e) c = e;
-                a.rows = c
+                numberOfCorteges++;
+            }
+
+        }
+        var isHeadAdded = false;
+        function addHead(tableID, jsonObj) {
+            var output = "<thead><tr>";
+            for (var j = 0; j < jsonObj['req'][0].length; j++) {
+                output += "<th>" + jsonObj['req'][0][j] + "</th>";
+            }
+            output += "</tr></thead><tbody></tbody>";
+
+            document.getElementById(tableID).innerHTML = output;
+            isHeadAdded = true;
+
+        }
+
+        var last;
+        function returnLastButton() {
+            last = event.currentTarget.value;
+        }
+        var currentId;
+
+        function sendFrom(id) {
+            currentId = id;
+            number = 0;
+            createTable();
+            buttonPushed();
+            toIterate = true;
+            numberOfTyples = 0;
+        }
+
+
+        function generateLink() {
+            var dict = form_params(currentId);
+            number++;
+            dict['page'] = number;
+            console.log(dict);
+            return dict;
+        }
+
+        function generateQuery(obj) {
+            var str = [];
+            for (var p in obj)
+                if (obj.hasOwnProperty(p)) {
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                }
+            return str.join("&");
+        }
+
+        function form_params(form) {
+            var params = [];
+            var el = document.getElementById("navigation");
+            var length = form.elements.length;
+            params["formname"] = form.name;
+            params["page_size"] = 20;
+            for (var i = 0; i < length; i++) {
+                element = form.elements[i];
+
+                if (element.tagName == 'TEXTAREA') {
+                    params[element.name] = element.value
+                }
+                else if (element.tagName == 'INPUT') {
+                    if (element.type == 'text' || element.type == 'hidden' || element.type == 'password') {
+                        params[element.name] = element.value
+                    }
+                    else if (element.type == 'radio' && element.checked) {
+                        if (!element.value)
+                            params[element.name] = element.id;
+                        else
+                            params[element.name] = element.id;
+
+                    }
+                    else if (element.type == 'checkbox' && element.checked) {
+                        if (!element.value)
+                            params[element.name] = "on";
+                        else
+                            params[element.name] = element.value
+                    }
+                }
+            }
+            params["button"] = last;
+            return params;
+        }
+
+        var numberOfTyples;
+        var pageSize = 20;
+        var toIterate = true;
+
+        function load_new() {
+            if (toIterate) {
+                console.log("in Ajax", generateLink());
+                var dict = form_params(currentId);
+                dict['page'] = number;
+                number++;
+                var query = generateQuery(dict);
+                console.log(query);
+                xmlhttp.open("POST", "/getallitems.json?" + query, true);
+                xmlhttp.send();
+
+
+                xmlhttp.onload = function rec(data) {
+
+
+                    if (data) {
+                        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+                            var jsonobj = JSON.parse(xmlhttp.responseText);
+
+
+                            if (!isHeadAdded) {
+                                addHead("tableOfData", jsonobj);
+                                numberOfTyples = jsonobj['req'].length - 1;
+                                if (numberOfTyples % pageSize > 0 || numberOfTyples == 0) {
+                                    toIterate = false;
+                                }
+                            }
+                            addRow("tableOfData", jsonobj);
+                            console.log('data append', jsonobj);
+
+//                            // Вызываем плагин
+//                            $("#content").jscroll({
+//                                autoTriggerUntil: 2,
+//                                debug: true
+//                            });
+                        }
+                    }
+                };
+
+                return false;
             }
         }
-    }
-    ;
-    window.onload = function () {
-        flexibleTextarea('textarea');
-    }
-</script>
 
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript">
-    loadGaugeChart(function () {
+        function buttonPushed() {
+            if (last == "Select" || last == "Run") {
+                load_new();
+            }
+        }
+        window.onscroll = function () {
+            var scrolled = window.pageYOffset || document.documentElement.scrollTop;
+            scrolled += window.innerHeight;
+            var body = document.body,
+                    html = document.documentElement;
+
+            var height = Math.max(body.scrollHeight, body.offsetHeight,
+                    html.clientHeight, html.scrollHeight, html.offsetHeight);
+            if (scrolled >= height) {
+                buttonPushed();
+            }
+            document.getElementById('showScroll').innerHTML = scrolled + 'px';
+        }
+
+        // xmlhttp.onreadystatechange = GetArticles;
+        // the receive function will be triggered once the ajax
+        // request is terminated.
+
+    </script>
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <script type="text/javascript">     loadGaugeChart(function () {
         drawGaugeChart(1, 1, 1, 1000, 1000, 1000, 50, 50, 50, 70, 70, 70);
     });
     function loadGaugeChart(myCallback) {
         google.load("visualization", "1", {packages: ["gauge"], callback: myCallback});
     }
-
     google.setOnLoadCallback(drawGaugeChart);
-
-
     var xmlhttp;
-    if (window.XMLHttpRequest) {
-        // code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp = new XMLHttpRequest();
-    } else {
-        // code for IE6, IE5
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-
-    function receive_av() {
-        var json = {
-            "io": "90",
-            "mem": "10",
-            "cpu": "10"
-        };
-
-
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-
-            var jsonobj = JSON.parse(xmlhttp.responseText);
-            drawGaugeChart(parseInt(json["io"]), parseInt(json["mem"]), parseInt(json["cpu"]), io_max, mem_max, cpu_max, io_yellow, mem_yellow, cpu_yellow, io_red, mem_red, cpu_red);
-            var output = xmlhttp.responseText;
-            //document.getElementById("raw").innerHTML = output;
-
-
-        } else {
-            alert("data not available");
-        }
-    }
-
-    xmlhttp.onload = receive_av;
-    var io_max, mem_max, cpu_max, io_yellow, mem_yellow, cpu_yellow, io_red, mem_red, cpu_red;
-    function request_av(id) {
-        var dict = form_params(id);
-
-        io_max = dict["io_max"]
-        mem_max = dict["mem_max"]
-        cpu_max = dict["cpu_max"]
-        io_yellow = dict["io_yellow"]
-        mem_yellow = dict["mem_yellow"]
-        cpu_yellow = dict["cpu_yellow"]
-        io_red = dict["io_red"]
-        mem_red = dict["mem_red"]
-        cpu_red = dict["cpu_red"]
-
-        xmlhttp.open("POST", "/getallitems.json?" + "action=get_AV", true);
-        xmlhttp.send();
-    }
-
-    function form_params(form) {
-        var params = [];
-        var length = form.elements.length;
-        for (var i = 0; i < length; i++) {
-            element = form.elements[i];
-
-            if (element.tagName == 'TEXTAREA') {
-                params[element.name] = element.value
-            }
-            else if (element.tagName == 'INPUT') {
-                if (element.type == 'text' || element.type == 'hidden' || element.type == 'password') {
-                    params[element.name] = element.value
-                }
-                else if (element.type == 'radio' && element.checked) {
-                    if (!element.value)
-                        params[element.name] = "on";
-                    else
-                        params[element.name] = element.value
-
-                }
-                else if (element.type == 'checkbox' && element.checked) {
-                    if (!element.value)
-                        params[element.name] = "on";
-                    else
-                        params[element.name] = element.value
-                }
-            }
-        }
-        return params;
-    }
-
-
-    function drawGaugeChart(io, mem, cpu, io_max, mem_max, cpu_max, io_yellow, mem_yellow, cpu_yellow, io_red, mem_red, cpu_red) {
-
-        var data_io = google.visualization.arrayToDataTable([
-            ['Label', 'Value'],
-            ['I/O', io / io_max * 100]
-        ]);
-
-        var options_io = {
-            width: 200, height: 200,
-            redFrom: io_red, redTo: 100,
-            yellowFrom: io_yellow, yellowTo: io_red,
-            greenFrom: 0, greenTo: io_yellow,
-            minorTicks: 5,
-        };
-
-        var data_mem = google.visualization.arrayToDataTable([
-            ['Label', 'Value'],
-            ['Memory', mem / mem_max * 100]
-        ]);
-
-        var options_mem = {
-            width: 200, height: 200,
-            redFrom: mem_red, redTo: 100,
-            yellowFrom: mem_yellow, yellowTo: mem_red,
-            greenFrom: 0, greenTo: mem_yellow,
-            minorTicks: 5
-        };
-
-        var data_cpu = google.visualization.arrayToDataTable([
-            ['Label', 'Value'],
-            ['CPU', cpu / cpu_max * 100]
-        ]);
-
-        var options_cpu = {
-            width: 200, height: 200,
-            redFrom: cpu_red, redTo: 100,
-            yellowFrom: cpu_yellow, yellowTo: cpu_red,
-            greenFrom: 0, greenTo: cpu_yellow,
-            minorTicks: 5
-        };
-
-
-        var chart_io = new google.visualization.Gauge(document.getElementById('chart_div_io'));
-        chart_io.draw(data_io, options_io);
-        var chart_mem = new google.visualization.Gauge(document.getElementById('chart_div_mem'));
-        chart_mem.draw(data_mem, options_mem);
-        var chart_cpu = new google.visualization.Gauge(document.getElementById('chart_div_cpu'));
-        chart_cpu.draw(data_cpu, options_cpu);
-
-    }
-
-</script>
-
-<script language="JavaScript" type="text/javascript">
-
-    function average_per_time_block() {
+    if (window.XMLHttpRequest) {         // code for IE7+, Firefox, Chrome, Opera, Safari         xmlhttp = new XMLHttpRequest();     } else {         // code for IE6, IE5         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");     }      function receive_av() {         var json = {             "io": "90",             "mem": "10",             "cpu": "10"         };           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {              var jsonobj = JSON.parse(xmlhttp.responseText);             drawGaugeChart(parseInt(json["io"]), parseInt(json["mem"]), parseInt(json["cpu"]), io_max, mem_max, cpu_max, io_yellow, mem_yellow, cpu_yellow, io_red, mem_red, cpu_red);             var output = xmlhttp.responseText;             //document.getElementById("raw").innerHTML = output;           } else {             alert("data not available");         }     }      xmlhttp.onload = receive_av;     var io_max, mem_max, cpu_max, io_yellow, mem_yellow, cpu_yellow, io_red, mem_red, cpu_red;     function request_av(id) {         var dict = form_params(id);          io_max = dict["io_max"]         mem_max = dict["mem_max"]         cpu_max = dict["cpu_max"]         io_yellow = dict["io_yellow"]         mem_yellow = dict["mem_yellow"]         cpu_yellow = dict["cpu_yellow"]         io_red = dict["io_red"]         mem_red = dict["mem_red"]         cpu_red = dict["cpu_red"]          xmlhttp.open("POST", "/getallitems.json?" + "action=get_AV", true);         xmlhttp.send();     }      function form_params(form) {         var params = [];         var length = form.elements.length;         for (var i = 0; i < length; i++) {             element = form.elements[i];              if (element.tagName == 'TEXTAREA') {                 params[element.name] = element.value             }             else if (element.tagName == 'INPUT') {                 if (element.type == 'text' || element.type == 'hidden' || element.type == 'password') {                     params[element.name] = element.value                 }                 else if (element.type == 'radio' && element.checked) {                     if (!element.value)                         params[element.name] = "on";                     else                         params[element.name] = element.value                  }                 else if (element.type == 'checkbox' && element.checked) {                     if (!element.value)                         params[element.name] = "on";                     else                         params[element.name] = element.value                 }             }         }         return params;     }       function drawGaugeChart(io, mem, cpu, io_max, mem_max, cpu_max, io_yellow, mem_yellow, cpu_yellow, io_red, mem_red, cpu_red) {          var data_io = google.visualization.arrayToDataTable([             ['Label', 'Value'],             ['I/O', io / io_max * 100]         ]);          var options_io = {             width: 200, height: 200,             redFrom: io_red, redTo: 100,             yellowFrom: io_yellow, yellowTo: io_red,             greenFrom: 0, greenTo: io_yellow,             minorTicks: 5,         };          var data_mem = google.visualization.arrayToDataTable([             ['Label', 'Value'],             ['Memory', mem / mem_max * 100]         ]);          var options_mem = {             width: 200, height: 200,             redFrom: mem_red, redTo: 100,             yellowFrom: mem_yellow, yellowTo: mem_red,             greenFrom: 0, greenTo: mem_yellow,             minorTicks: 5         };          var data_cpu = google.visualization.arrayToDataTable([             ['Label', 'Value'],             ['CPU', cpu / cpu_max * 100]         ]);          var options_cpu = {             width: 200, height: 200,             redFrom: cpu_red, redTo: 100,             yellowFrom: cpu_yellow, yellowTo: cpu_red,             greenFrom: 0, greenTo: cpu_yellow,             minorTicks: 5         };           var chart_io = new google.visualization.Gauge(document.getElementById('chart_div_io'));         chart_io.draw(data_io, options_io);         var chart_mem = new google.visualization.Gauge(document.getElementById('chart_div_mem'));         chart_mem.draw(data_mem, options_mem);         var chart_cpu = new google.visualization.Gauge(document.getElementById('chart_div_cpu'));         chart_cpu.draw(data_cpu, options_cpu);      }  </script>
+      
+    <script language="JavaScript" type="text/javascript">      function average_per_time_block() {
         var json = {"io": "1000", "mem": "12", "cpu": "33"};
         document.getElementById("info").innerHTML = "Average parameters per specified time block:";
         document.getElementById("io_average").innerHTML = "I/O disk:" + " " + json["io"];
         document.getElementById("mem_average").innerHTML = "Memory space:" + " " + json["mem"];
         document.getElementById("cpu_average").innerHTML = "CPU time:" + " " + json["cpu"];
-
-
-    }
-</script>
-
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript">
-    google.load("visualization", "1.1", {packages: ["bar"]});
+    } </script>
+      
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+     
+    <script type="text/javascript">     google.load("visualization", "1.1", {packages: ["bar"]});
     google.setOnLoadCallback(drawTimeChart);
     function drawTimeChart() {
-        var data = google.visualization.arrayToDataTable([
-            ['Time', 'I/O disk', 'Memory', 'CPU time'],
-            ['7-8 a.m.', 1000, 400, 200],
-            ['8-9 a.m.', 1170, 460, 250],
-            ['9-10 a.m.', 660, 1120, 300],
-            ['10-11 a.m.', 1030, 540, 350]
-        ]);
-
+        var data = google.visualization.arrayToDataTable([['Time', 'I/O disk', 'Memory', 'CPU time'], ['7-8 a.m.', 1000, 400, 200], ['8-9 a.m.', 1170, 460, 250], ['9-10 a.m.', 660, 1120, 300], ['10-11 a.m.', 1030, 540, 350]]);
         var options = {
             chart: {
                 title: "",
                 subtitle: 'I/O disk, Memory and CPU time: 7-11 a.m.',
-                legend: {
-                    position: "bottom"
-                }
-
+                legend: {position: "bottom"}
             }
         };
-
         var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
-
         chart.draw(data, options);
-    }
-</script>
+    } </script>
+
 
 </head>
 
@@ -314,6 +330,7 @@
                 <span class="sr-only">Toggle navigation</span>
             </button>
             <a class="topico navbar-brand" href="#">DMD Pr&#160;<span class="glyphicon glyphicon-globe"></span>&#160;ject</a>
+
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
@@ -328,14 +345,13 @@
 <div class="container-fluid">
     <div class="row">
 
-
         <p></p>
 
         <div class="tabbable">
             <ul class="nav nav-pills nav-stacked col-md-2">
                 <li class="active"><a href="#tab1" data-toggle="tab">Records manipulator</a></li>
                 <li><a href="#tab2" data-toggle="tab">SQL queries console</a></li>
-                <li><a href="#tab3" data-toggle="tab">Performance Dashboard</a></li>
+                <li><a href="#tab3" data-toggle="tab">Graphics</a></li>
             </ul>
 
             <div class="tab-content col-md-9">
@@ -377,7 +393,8 @@
                                     <!------------------------------------------------------------------------------------------------------------------------------------>
                                     <div class="tab-pane fade in active" id="select1">
 
-                                        <form class="form-horizontal" id="profileForm1" role="form">
+                                        <form class="form-horizontal" id="article_select" name="article_select"
+                                              role="form">
                                             <div class="form-group">
 
                                                 <div class="input-group">
@@ -401,14 +418,15 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" name="venue"
+                                                    <input type="text" class="form-control" name="venue_str"
                                                            placeholder="venue">
                                                     <span class="input-group-addon">Venue</span>
                                                 </div>
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-primary">
+                                                <button class="btn btn-primary" onClick="returnLastButton();"
+                                                        value="Select">
                                             <span class="glyphicon glyphicon-search">
                                             </span>
                                                     &#160;Select
@@ -419,12 +437,12 @@
                                                     <li>
                                                         <span>&nbsp;&nbsp;</span>
                                                         <label>
-                                                            <input checked="" type="radio" name="optradio1">&nbsp;Sort
+                                                            <input checked="" type="radio" id="autors" name="sort_by">&nbsp;Sort
                                                             by autors
                                                         </label>
                                                     </li>
-                                                    <li><span>&nbsp;&nbsp;</span><label><input type="radio"
-                                                                                               name="optradio1">&nbsp;Sort
+                                                    <li><span>&nbsp;&nbsp;</span><label><input type="radio" id="years"
+                                                                                               name="sort_by">&nbsp;Sort
                                                         by years
                                                     </label></li>
                                                 </ul>
@@ -434,10 +452,10 @@
 
                                     </div>
                                     <!------------------------------------------------------------------------------------------------------------------------------------>
-
                                     <div class="tab-pane" id="insert1">
 
-                                        <form class="form-horizontal" id="profileForm2" role="form">
+                                        <form class="form-horizontal" id="article_insert" name="article_insert"
+                                              role="form">
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <input type="text" name="title" class="form-control"
@@ -461,7 +479,8 @@
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-primary">
+                                                <button class="btn btn-primary" onClick="returnLastButton();"
+                                                        value="Insert">
                                             <span class="glyphicon glyphicon-import">
                                             </span>&#160;Insert
                                                 </button>
@@ -469,10 +488,10 @@
                                         </form>
 
                                     </div>
-
                                     <!------------------------------------------------------------------------------------------------------------------------------------>
                                     <div class="tab-pane" id="update1">
-                                        <form class="form-horizontal" id="profileForm3" role="form">
+                                        <form class="form-horizontal" id="article_update" name="article_update"
+                                              role="form">
                                             <div class="form-group">
 
                                                 <div class="input-group">
@@ -482,30 +501,35 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" placeholder="title">
+                                                    <input type="text" name="title" class="form-control"
+                                                           placeholder="title">
                                                     <span class="input-group-addon">Title</span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" placeholder="year">
+                                                    <input type="text" name="year" class="form-control"
+                                                           placeholder="year">
                                                     <span class="input-group-addon">Year</span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" placeholder="venue">
+                                                    <input type="text" name="venue" class="form-control"
+                                                           placeholder="venue">
                                                     <span class="input-group-addon">Venue</span>
                                                 </div>
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-primary">
+                                                <button class="btn btn-success" onClick="returnLastButton();"
+                                                        value="Update">
                                             <span class="glyphicon glyphicon-refresh">
                                             </span>
                                                     &#160;Update
                                                 </button>
-                                                <button class="btn btn-primary">
+                                                <button class="btn btn-primary" onClick="returnLastButton();"
+                                                        value="Show">
                                             <span class="glyphicon glyphicon-eye-open">
                                             </span>
                                                     &#160;Show
@@ -517,7 +541,8 @@
                                     <!------------------------------------------------------------------------------------------------------------------------------------>
                                     <div class="tab-pane" id="delete1">
 
-                                        <form class="form-horizontal" id="profileForm4" role="form">
+                                        <form class="form-horizontal" id="article_delete" name="article_delete"
+                                              role="form">
                                             <div class="form-group">
 
                                                 <div class="input-group">
@@ -527,12 +552,14 @@
                                             </div>
 
                                             <div class="btn-group">
-                                                <button class="btn btn-danger">
+                                                <button class="btn btn-danger" onClick="returnLastButton();"
+                                                        value="Delete">
                                             <span class="glyphicon glyphicon-trash">
                                             </span>
                                                     &#160;Delete
                                                 </button>
-                                                <button class="btn btn-primary">
+                                                <button class="btn btn-primary" onClick="returnLastButton();"
+                                                        value="Show">
                                             <span class="glyphicon glyphicon-eye-open">
                                             </span>
                                                     &#160;Show
@@ -564,14 +591,138 @@
                             <div class="col-xs-9">
                                 <!-- Tab panes -->
                                 <div class="tab-content">
-                                    <div class="tab-pane fade in active" id="select2">Select2</div>
-                                    <div class="tab-pane" id="insert2">Insert2</div>
-                                    <div class="tab-pane" id="update2">Update2</div>
-                                    <div class="tab-pane" id="delete2">Delete2</div>
+                                    <div class="tab-pane fade in active" id="select2">
+
+                                        <form class="form-horizontal" id="author_select" name="author_select"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="id" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="namea"
+                                                           placeholder="name">
+                                                    <span class="input-group-addon">Name</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" onClick="returnLastButton();"
+                                                        value="Select">
+                                            <span class="glyphicon glyphicon-search">
+                                            </span>
+                                                    &#160;Select
+                                                </button>
+                                                <button type="button" class="btn btn-primary dropdown-toggle"
+                                                        data-toggle="dropdown"><span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <span>&nbsp;&nbsp;</span>
+                                                        <label>
+                                                            <input checked="" type="radio" id="autors" name="sort_by">&nbsp;Sort
+                                                            by autors
+                                                        </label>
+                                                    </li>
+                                                    <li><span>&nbsp;&nbsp;</span><label><input type="radio" id="years"
+                                                                                               name="sort_by">&nbsp;Sort
+                                                        by years
+                                                    </label></li>
+                                                </ul>
+
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <div class="tab-pane" id="insert2">
+                                        <form class="form-horizontal" id="author_insert" name="author_insert"
+                                              role="form">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="namea" class="form-control"
+                                                           placeholder="name">
+                                                    <span class="input-group-addon">Name</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" onClick="returnLastButton();"
+                                                        value="Insert">
+                                            <span class="glyphicon glyphicon-import">
+                                            </span>&#160;Insert
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane" id="update2">
+                                        <form class="form-horizontal" id="author_update" name="author_update"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" name="id" class="form-control" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="namea" class="form-control"
+                                                           placeholder="name">
+                                                    <span class="input-group-addon">Name</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" onClick="returnLastButton();"
+                                                        value="Update">
+                                            <span class="glyphicon glyphicon-refresh">
+                                            </span>
+                                                    &#160;Update
+                                                </button>
+                                                <button class="btn btn-primary" onClick="returnLastButton();"
+                                                        value="Show">
+                                            <span class="glyphicon glyphicon-eye-open">
+                                            </span>
+                                                    &#160;Show
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane" id="delete2">
+                                        <form class="form-horizontal" id="author_delete" name="author_delete"
+                                              role="form">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="id" name="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-danger" onClick="returnLastButton();"
+                                                        value="Delete">
+                                            <span class="glyphicon glyphicon-trash">
+                                            </span>
+                                                    &#160;Delete
+                                                </button>
+                                                <button class="btn btn-primary" onClick="returnLastButton();"
+                                                        value="Show">
+                                            <span class="glyphicon glyphicon-eye-open">
+                                            </span>
+                                                    &#160;Show
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
 
                         </div>
+                        <!------------------------------------------------------------------------------------------------------------------------------------>
+                        <!------------------------------------------------------------------------------------------------------------------------------------>
                         <!------------------------------------------------------------------------------------------------------------------------------------>
                         <div id="panely3" class="tab-pane fade">
                             <h2>Venues</h2>
@@ -589,14 +740,138 @@
                             <div class="col-xs-9">
                                 <!-- Tab panes -->
                                 <div class="tab-content">
-                                    <div class="tab-pane fade in active" id="select3">Select3</div>
-                                    <div class="tab-pane" id="insert3">Insert3</div>
-                                    <div class="tab-pane" id="update3">Update3</div>
-                                    <div class="tab-pane" id="delete3">Delete3</div>
+                                    <div class="tab-pane fade in active" id="select3">
+
+                                        <form class="form-horizontal" id="venue_select" name="venue_select"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="id" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="origin"
+                                                           placeholder="origin">
+                                                    <span class="input-group-addon">Origin</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" onClick="returnLastButton();"
+                                                        value="Select">
+                                            <span class="glyphicon glyphicon-search">
+                                            </span>
+                                                    &#160;Select
+                                                </button>
+                                                <button type="button" class="btn btn-primary dropdown-toggle"
+                                                        data-toggle="dropdown"><span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <span>&nbsp;&nbsp;</span>
+                                                        <label>
+                                                            <input checked="" type="radio" id="autors" name="sort_by">&nbsp;Sort
+                                                            by autors
+                                                        </label>
+                                                    </li>
+                                                    <li><span>&nbsp;&nbsp;</span><label><input type="radio" id="years"
+                                                                                               name="sort_by">&nbsp;Sort
+                                                        by years
+                                                    </label></li>
+                                                </ul>
+
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <div class="tab-pane" id="insert3">
+                                        <form class="form-horizontal" id="venue_insert" name="venue_insert"
+                                              role="form">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="origin" class="form-control"
+                                                           placeholder="origin">
+                                                    <span class="input-group-addon">Origin</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" onClick="returnLastButton();"
+                                                        value="Insert">
+                                            <span class="glyphicon glyphicon-import">
+                                            </span>&#160;Insert
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane" id="update3">
+                                        <form class="form-horizontal" id="venue_update" name="venue_update"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" name="id" class="form-control" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="origin" class="form-control"
+                                                           placeholder="origin">
+                                                    <span class="input-group-addon">Origin</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" onClick="returnLastButton();"
+                                                        value="Update">
+                                            <span class="glyphicon glyphicon-refresh">
+                                            </span>
+                                                    &#160;Update
+                                                </button>
+                                                <button class="btn btn-primary" onClick="returnLastButton();"
+                                                        value="Show">
+                                            <span class="glyphicon glyphicon-eye-open">
+                                            </span>
+                                                    &#160;Show
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane" id="delete3">
+                                        <form class="form-horizontal" id="venue_delete" name="venue_delete"
+                                              role="form">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="id" name="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-danger" onClick="returnLastButton();"
+                                                        value="Delete">
+                                            <span class="glyphicon glyphicon-trash">
+                                            </span>
+                                                    &#160;Delete
+                                                </button>
+                                                <button class="btn btn-primary" onClick="returnLastButton();"
+                                                        value="Show">
+                                            <span class="glyphicon glyphicon-eye-open">
+                                            </span>
+                                                    &#160;Show
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
 
                         </div>
+                        <!------------------------------------------------------------------------------------------------------------------------------------>
+                        <!------------------------------------------------------------------------------------------------------------------------------------>
                         <!------------------------------------------------------------------------------------------------------------------------------------>
                         <div id="panely4" class="tab-pane fade">
                             <h2>Links</h2>
@@ -606,7 +881,6 @@
                                 <ul class="nav nav-tabs tabs-left">
                                     <li class="active"><a href="#select4" data-toggle="tab">Select</a></li>
                                     <li><a href="#insert4" data-toggle="tab">Insert</a></li>
-                                    <li><a href="#update4" data-toggle="tab">Update</a></li>
                                     <li><a href="#delete4" data-toggle="tab">Delete</a></li>
                                 </ul>
                             </div>
@@ -614,10 +888,112 @@
                             <div class="col-xs-9">
                                 <!-- Tab panes -->
                                 <div class="tab-content">
-                                    <div class="tab-pane fade in active" id="select4">Select4</div>
-                                    <div class="tab-pane" id="insert4">Insert4</div>
-                                    <div class="tab-pane" id="update4">Update4</div>
-                                    <div class="tab-pane" id="delete4">Delete4</div>
+                                    <div class="tab-pane fade in active" id="select4">
+
+                                        <form class="form-horizontal" id="links_select" name="links_select"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="id" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="link_id"
+                                                           placeholder="link_id">
+                                                    <span class="input-group-addon">Link</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" onClick="returnLastButton();"
+                                                        value="Select">
+                                            <span class="glyphicon glyphicon-search">
+                                            </span>
+                                                    &#160;Select
+                                                </button>
+                                                <button type="button" class="btn btn-primary dropdown-toggle"
+                                                        data-toggle="dropdown"><span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <span>&nbsp;&nbsp;</span>
+                                                        <label>
+                                                            <input checked="" type="radio" id="autors" name="sort_by">&nbsp;Sort
+                                                            by autors
+                                                        </label>
+                                                    </li>
+                                                    <li><span>&nbsp;&nbsp;</span><label><input type="radio" id="years"
+                                                                                               name="sort_by">&nbsp;Sort
+                                                        by years
+                                                    </label></li>
+                                                </ul>
+
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <div class="tab-pane" id="insert4">
+                                        <form class="form-horizontal" id="links_insert" name="links_insert"
+                                              role="form">
+                                            <div class="form-group">
+
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="id" placeholder="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" name="link_id" class="form-control"
+                                                           placeholder="link_id">
+                                                    <span class="input-group-addon">Link</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" onClick="returnLastButton();"
+                                                        value="Insert">
+                                            <span class="glyphicon glyphicon-import">
+                                            </span>&#160;Insert
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane" id="delete4">
+                                        <form class="form-horizontal" id="links_delete" name="links_delete"
+                                              role="form">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="id" name="id">
+                                                    <span class="input-group-addon">ID</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="link_id"
+                                                           name="link_id">
+                                                    <span class="input-group-addon">Link</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-danger" onClick="returnLastButton();"
+                                                        value="Delete">
+                                            <span class="glyphicon glyphicon-trash">
+                                            </span>
+                                                    &#160;Delete
+                                                </button>
+                                                <button class="btn btn-primary" onClick="returnLastButton();"
+                                                        value="Show">
+                                            <span class="glyphicon glyphicon-eye-open">
+                                            </span>
+                                                    &#160;Show
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
 
@@ -633,21 +1009,30 @@
                 <div class="tab-pane" id="tab2">
                     <h2>SQL query console</h2>
 
-                    <textarea id="textarea" class="control-group error" cols="130" rows="10"></textarea>
+                    <form class="form-horizontal" id="SQLQueryexecutor" name="SQLQueryexecutor"
+                          role="form">
+                        <textarea id="textarea" name="SQLquery" placeholder="Write your SQL query here..."
+                                  class="form-control" cols="130" rows="10"></textarea>
 
-                    <div class="btn-group">
-                        <button class="btn btn-primary">Run <span class="glyphicon glyphicon-play"></span></button>
-                        <button type="button" class="btn btn-primary dropdown-toggle"
-                                data-toggle="dropdown"><span class="caret"></span></button>
-                        <ul class="dropdown-menu">
-                            <li><span>&nbsp;&nbsp;</span>
-                                <label><input checked="" type="radio" name="optradio1">&nbsp;Sort by autors</label>
-                            </li>
-                            <li><span>&nbsp;&nbsp;</span><label><input type="radio" name="optradio1">&nbsp;Sort by years</label>
-                            </li>
-                        </ul>
+                        <p></p>
 
-                    </div>
+                        <div class="btn-group">
+                            <button class="btn btn-primary" value="Run"
+                                    onClick="sendFrom(document.getElementById('SQLQueryexecutor')); return false;">Run
+                                <span class="glyphicon glyphicon-play"></span></button>
+                            <button type="button" class="btn btn-primary dropdown-toggle"
+                                    data-toggle="dropdown"><span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><span>&nbsp;&nbsp;</span>
+                                    <label><input checked="" type="radio" id="authors" name="sort_by">&nbsp;Sort by
+                                        autors</label>
+                                </li>
+                                <li><span>&nbsp;&nbsp;</span><label><input type="radio" id="years" name="sort_by">&nbsp;Sort
+                                    by years</label></li>
+                            </ul>
+                        </div>
+                    </form>
+
 
                 </div>
 
@@ -674,8 +1059,10 @@
                                 Maximum for Memory: <input type="text" class="form-control" name="mem_max"><br>
                                 Maximum for CPU time: <input type="text" class="form-control" name="cpu_max"><br>
                                 Yellow threshold for I/O disk: <input type="text" class="form-control" name="io_yellow"><br>
-                                Yellow threshold for Memory: <input type="text"  class="form-control"name="mem_yellow"><br>
-                                Yellow threshold for CPU time: <input type="text" class="form-control" name="cpu_yellow"><br>
+                                Yellow threshold for Memory: <input type="text" class="form-control"
+                                                                    name="mem_yellow"><br>
+                                Yellow threshold for CPU time: <input type="text" class="form-control"
+                                                                      name="cpu_yellow"><br>
                                 Red threshold for I/O disk: <input type="text" class="form-control" name="io_red"><br>
                                 Red threshold for Memory: <input type="text" class="form-control" name="mem_red"><br>
                                 Red threshold for CPU time: <input type="text" class="form-control" name="cpu_red"><br>
@@ -684,14 +1071,20 @@
                                         id="btn" class="btn btn-primary">Show health
                                 </button>
                                 <br>
-                                <br>
-                                <br>
                             </form>
 
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div id="chart_div_io"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div id="chart_div_mem"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div id="chart_div_cpu"></div>
+                                </div>
+                            </div>
 
-                            <div id="chart_div_io"></div>
-                            <div id="chart_div_mem"></div>
-                            <div id="chart_div_cpu"></div>
 
                         </div>
 
@@ -738,63 +1131,31 @@
 
                     <h2 class="sub-header"> Result</h2>
 
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>id</th>
-                                <th>title</th>
-                                <th>year</th>
-                                <th>venue_id</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
 
-                                <td>14151</td>
-                                <td>Adaptive Image Content-Based Exposure Control for Scanning Applications in
-                                    Radiography.
-                                </td>
-                                <td>2005</td>
-                                <td>211</td>
-                            </tr>
-                            <tr>
-                                <td>19691</td>
-                                <td>A Brochette of Socially Interactive Robots.</td>
-                                <td>2007</td>
-                                <td>274</td>
-                            </tr>
-                            <tr>
-                                <td>36445</td>
-                                <td>Wireless Sensor Networks for Home Health Care.</td>
-                                <td>2007</td>
-                                <td>367</td>
-                            </tr>
-                            <tr>
-                                <td>52829</td>
-                                <td>Key features of the design methodology enabling a multi-core SoC implementation of a
-                                    first-generation CELL processor.
-                                </td>
-                                <td>2006</td>
-                                <td>495</td>
-                            </tr>
-                            <tr>
-                                <td>55611</td>
-                                <td>The EO-1 Autonomous Science Agent.</td>
-                                <td>2004</td>
-                                <td>509</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                    <!--TODO Lazy loading-->
+
+
+                    <div class="content">
+                        <div id="forin">
+
+                        </div>
                     </div>
+
+                    <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button"
+                       title="Click to return on the top page" data-toggle="tooltip" data-placement="left">
+                        <span class="glyphicon glyphicon-chevron-up"></span>
+                    </a>
                 </div>
-                <!------------------------------------------------------------------------------------------------------------------------------------>
+
 
             </div>
+            <!------------------------------------------------------------------------------------------------------------------------------------>
+
         </div>
-
-
     </div>
+
+
+</div>
 </div>
 
 
@@ -810,10 +1171,11 @@
     });
 </script>
 
+
 <!--*********************************************************************************************************************-->
 <script language="JavaScript" type="text/javascript">
     $(document).ready(function () {
-        $('#profileForm1').formValidation({
+        $('#article_select').formValidation({
             framework: 'bootstrap',
             icon: {
                 valid: 'glyphicon glyphicon-ok',
@@ -843,29 +1205,22 @@
                     }
                 },
                 title: {
-                    validators: {
-                        regexp: {
-                            regexp: /^\d+$/,
-                            message: 'The year can only consist of integers'
-                        }
-                    }
+                    validators: {}
                 },
-                venue: {
-                    validators: {
-                        regexp: {
-                            regexp: /^\d+$/,
-                            message: 'The year can only consist of integers'
-                        }
-                    }
+                venue_str: {
+                    validators: {}
                 }
             }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('article_select'));
+
+            return false;
         });
-    });
-</script>
-<!--*********************************************************************************************************************-->
-<script language="JavaScript" type="text/javascript">
-    $(document).ready(function () {
-        $('#profileForm2').formValidation({
+
+        $('#article_insert').formValidation({
             framework: 'bootstrap',
             icon: {
                 valid: 'glyphicon glyphicon-ok',
@@ -881,6 +1236,11 @@
                         regexp: {
                             regexp: /^\d+$/,
                             message: 'The year can only consist of integers'
+                        },
+                        between: {
+                            min: 1900,
+                            max: 2015,
+                            message: 'The year must be between 1900 and 2015'
                         }
                     }
                 },
@@ -889,10 +1249,7 @@
                         notEmpty: {
                             message: 'The title is required'
                         },
-                        regexp: {
-                            regexp: /^\d+$/,
-                            message: 'The title can only consist of integers'
-                        }
+
                     }
                 },
                 venue: {
@@ -900,21 +1257,59 @@
                         notEmpty: {
                             message: 'The venue is required'
                         },
+
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            console.log('valid');
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('article_insert'));
+            return false;
+        });
+        $('#article_update').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
                         regexp: {
                             regexp: /^\d+$/,
-                            message: 'The venue can only consist of integers'
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                },
+                year: {
+                    validators: {
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The year can only consist of integers'
+                        },
+                        between: {
+                            min: 1900,
+                            max: 2015,
+                            message: 'The year must be between 1900 and 2015'
                         }
                     }
                 }
             }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('article_update'));
+            return false;
         });
-    });
-</script>
-
-<!--*********************************************************************************************************************-->
-<script language="JavaScript" type="text/javascript">
-    $(document).ready(function () {
-        $('#profileForm3').formValidation({
+        $('#article_delete').formValidation({
             framework: 'bootstrap',
             icon: {
                 valid: 'glyphicon glyphicon-ok',
@@ -934,14 +1329,65 @@
                     }
                 }
             }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('article_delete'));
+            return false;
         });
-    });
-</script>
+        $('#author_select').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                },
+                namea: {
+                    validators: {}
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('author_select'));
+            return false;
+        });
+        $('#author_insert').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                namea: {
+                    validators: {
+                        notEmpty: {
+                            message: 'name is required'
+                        }
+                    }
+                }
 
-<!--*********************************************************************************************************************-->
-<script language="JavaScript" type="text/javascript">
-    $(document).ready(function () {
-        $('#profileForm4').formValidation({
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('author_insert'));
+            return false;
+        });
+        $('#author_update').formValidation({
             framework: 'bootstrap',
             icon: {
                 valid: 'glyphicon glyphicon-ok',
@@ -961,7 +1407,259 @@
                     }
                 }
             }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('author_update'));
+            return false;
         });
+        $('#author_delete').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('author_delete'));
+            return false;
+        });
+        $('#venue_select').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('venue_select'));
+            return false;
+        });
+        $('#venue_insert').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                origin: {
+                    validators: {
+                        notEmpty: {
+                            message: 'origin is required'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('venue_insert'));
+            return false;
+        });
+        $('#venue_update').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('venue_update'));
+            return false;
+        });
+        $('#venue_delete').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('venue_delete'));
+            return false;
+        });
+        $('#links_select').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                },
+                link_id: {
+                    validators: {
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('links_select'));
+            return false;
+        });
+        $('#links_insert').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                },
+                link_id: {
+                    validators: {
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The link_id can only consist of integers'
+                        },
+                        notEmpty: {
+                            message: 'The link_id is required'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('links_insert'));
+            return false;
+        });
+        ;
+        $('#links_delete').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                id: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            sendFrom(document.getElementById('links_delete'));
+            return false;
+        });
+        $('.scroll').jscroll();
+
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 50) {
+                $('#back-to-top').fadeIn();
+            } else {
+                $('#back-to-top').fadeOut();
+            }
+        });
+        // scroll body to 0px on click
+        $('#back-to-top').click(function () {
+            $('#back-to-top').tooltip('hide');
+            $('body,html').animate({
+                scrollTop: 0
+            }, 800);
+            return false;
+        });
+
+        $('#back-to-top').tooltip('show');
+
     });
 </script>
 
