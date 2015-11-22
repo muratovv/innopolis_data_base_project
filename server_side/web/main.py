@@ -1,3 +1,4 @@
+import psycopg2
 from bottle import *
 
 front_end_path = '../../front_end/'
@@ -117,9 +118,9 @@ def shop_aj_getallitems():
 def parse_request(request_dict=None):
     if not request_dict:
         request_dict = {}
-    if request_dict.get('formname', None):
+    if request_dict.get('formname', None) != 'SQLQueryexecutor':
         return table_request(request_dict)
-    elif request_dict.get('code', None):
+    elif request_dict.get('formname', None == 'SQLQueryexecutor'):
         return console_request(request_dict)
     else:
         return message_request(request_dict, 'Wrong request')
@@ -139,8 +140,16 @@ def table_request(request_dict=None):
 
 def console_request(request_dict=None):
     if not request_dict:
-        request_dict = {}
-    return {}
+        request_dict = {'req': ""}
+    from server_side.web.table_request import cur
+    reqponse_dict = {'req': [['Correct request']]}
+    try:
+        cur.execute(request_dict['SQLquery'])
+        if request_dict['SQLquery'].strip().lower().startswith('select'):
+            reqponse_dict['req'] = cur.fetchall()
+    except:
+        reqponse_dict['req'] = [['Something wrong']]
+    return reqponse_dict
 
 
 def message_request(request_string, message):
