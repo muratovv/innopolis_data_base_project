@@ -112,6 +112,7 @@ def jsontest():
 @post('/getallitems.json')
 def shop_aj_getallitems():
     req = dict(prepare_request(request.query))
+    print("REQUEST" + str(req))
     return parse_request(req)
 
 
