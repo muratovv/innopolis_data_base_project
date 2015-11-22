@@ -92,6 +92,7 @@
         var xmlhttp;
         var urlscroll;
         var number = 0;
+        var numberOfCorteges = 0;
 
         // Are we using a modern browser or ...
         if (window.XMLHttpRequest) {
@@ -102,52 +103,77 @@
             xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
 
-        function addRow(tableID) {
+        function createTable(jsonObj) {
+            var output = "<div class=\"table-responsive\">" +
+                    "<table id = \"tableOfData\" class=\"table table-striped\">" + "</table>";
+            document.getElementById("forin").innerHTML = output;
+            numberOfCorteges = 0;
+            isHeadAdded = false;
+        }
 
-            var tableRef = document.getElementById(tableID);
-            var newRow = tableRef.insertRow(0);
-            var newCell = newRow.insertCell(0);
-            var newText = document.createTextNode('New top row');
-            var newCell1 = newRow.insertCell(1);
-            newCell.appendChild(newText);
-            newCell1.appendChild('Hello!!!');
+        function addRow(tableID, jsonObj) {
+
+            var row;
+
+            var table = document.getElementById(tableID);
+            for (var i = 1; i < jsonObj['req'].length; i++) {
+                row = table.insertRow(numberOfCorteges + 1);
+                for (var j = 0; j < jsonObj['req'][0].length; j++) {
+                    row.insertCell(j).innerHTML = jsonObj['req'][i][j];
+                }
+                numberOfCorteges++;
+            }
+
+        }
+        var isHeadAdded = false;
+        function addHead(tableID, jsonObj) {
+            var output = "<thead><tr>";
+            for (var j = 0; j < jsonObj['req'][0].length; j++) {
+                output += "<th>" + jsonObj['req'][0][j] + "</th>";
+            }
+            output += "</tr></thead><tbody></tbody>";
+
+            document.getElementById(tableID).innerHTML = output;
+            isHeadAdded = true;
+
         }
 
         // This will render the two output which substitute the
         // elements id="raw" and id="forin"
-        function receive() {
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                // var jsonobj = eval ("(" + xmlhttp.responseText + ")");
-                var jsonobj = JSON.parse(xmlhttp.responseText);
+        //        function receive() {
+        //            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        //                // var jsonobj = eval ("(" + xmlhttp.responseText + ")");
+        //                var jsonobj = JSON.parse(xmlhttp.responseText);
+        //
+        ////                var output = xmlhttp.responseText;
+        //                //document.getElementById("raw").innerHTML = output;
+        //
+        //                var output = "<div class=\"table-responsive\">" +
+        //                        "<table class=\"table table-striped\">" +
+        //                        "<thead>" +
+        //                        "<tr>";
+        //                for (var j = 0; j < jsonobj['req'][0].length; j++) {
+        //                    output += "<th>" + jsonobj['req'][0][j] + "</th>";
+        //                }
+        //                output += "</tr>" +
+        //                        "</thead>";
+        //
+        //                for (var i = 1; i < jsonobj['req'].length; i++) {
+        //                    output += '<tr>';
+        //                    for (var j = 0; j < jsonobj['req'][0].length; j++) {
+        //                        output += '<td>' + jsonobj['req'][i][j] + '</td>';
+        //                    }
+        //                    output += '</tr>';
+        //                }
+        //
+        //                output += "</tbody> </table>";
+        //                document.getElementById("forin").innerHTML = output;
+        //
+        //            }
+        //        }
 
-                var output = xmlhttp.responseText;
-                //document.getElementById("raw").innerHTML = output;
 
-                output = "<div class=\"table-responsive\">" +
-                        "<table class=\"table table-striped\">" +
-                        "<thead>" +
-                        "<tr>";
-                for (var j = 0; j < jsonobj['req'][0].length; j++) {
-                    output += "<th>" + jsonobj['req'][0][j] + "</th>";
-                }
-                output += "</tr>" +
-                        "</thead>";
-
-                for (var i = 1; i < jsonobj['req'].length; i++) {
-                    output += '<tr>';
-                    for (var j = 0; j < jsonobj['req'][0].length; j++) {
-                        output += '<td>' + jsonobj['req'][i][j] + '</td>';
-                    }
-                    output += '</tr>';
-                }
-
-                output += "</tbody> </table>";
-                document.getElementById("forin").innerHTML = output;
-
-            }
-        }
-
-        xmlhttp.onload = receive;
+        //        xmlhttp.onload = receive;
 
         var last;
         function returnLastButton() {
@@ -156,29 +182,24 @@
         var currentId;
 
         function sendFrom(id) {
-            var dict = form_params(id);
+            currentId = id;
             number = 0;
-            dict['page'] = number;
-            var query = generateQuery(dict);
-            console.log(query);
-            xmlhttp.open("POST", "/getallitems.json?" + query, true);
-            xmlhttp.send();
-//            currentId = id;
+            createTable();
+            buttonPushed();
+            toIterate = 1;
+            now = 0;
+            numberOfTyples = 0;
 //            generateLink();
         }
 
 
-        //        function generateLink() {
-        //            var dict = form_params(currentId);
-        //            number++;
-        //            dict['page'] = number;
-        //            var query = generateQuery(dict);
-        //            console.log(query);
-        //            document.getElementById("scrolly").innerHTML = '<a href="' + query + '">next</a>';
-        //            document.getElementById("scrolly").innerHTML += '<script type="text/javascript">generateLink();</' + 'script>';
-        //            console.log(document.getElementById("scrolly").innerHTML);
-        //            //            document.getElementById().href = query;
-        //        }
+        function generateLink() {
+            var dict = form_params(currentId);
+            number++;
+            dict['page'] = number;
+            console.log(dict);
+            return dict;
+        }
 
         function generateQuery(obj) {
             var str = [];
@@ -224,6 +245,75 @@
             return params;
         }
 
+        var numberOfTyples;
+        var pageSize = 20;
+        var toIterate = 1;
+        var now;
+
+        function load_new() {
+            if (now < toIterate) {
+                console.log("in Ajax", generateLink());
+                var dict = form_params(currentId);
+                dict['page'] = number;
+                number++;
+                var query = generateQuery(dict);
+                console.log(query);
+                xmlhttp.open("POST", "/getallitems.json?" + query, true);
+                xmlhttp.send();
+
+
+                xmlhttp.onload = function rec(data) {
+
+
+                    if (data) {
+                        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+                            var jsonobj = JSON.parse(xmlhttp.responseText);
+
+
+                            if (!isHeadAdded) {
+                                addHead("tableOfData", jsonobj);
+                                numberOfTyples = jsonobj['req'].length - 1;
+                                toIterate = (numberOfTyples - numberOfTyples % pageSize) / pageSize;
+                                if (numberOfTyples % pageSize > 0) {
+                                    toIterate += 1;
+                                }
+                            }
+                            addRow("tableOfData", jsonobj);
+                            now++;
+                            console.log('data append', jsonobj);
+
+                            // Вызываем плагин
+                            $("#content").jscroll({
+                                autoTriggerUntil: 2,
+                                debug: true
+                            });
+                        }
+                    }
+                };
+
+                return false;
+            }
+        }
+
+        function buttonPushed() {
+            if (last == "Select" || last == "Run") {
+                load_new();
+            }
+        }
+        window.onscroll = function () {
+            var scrolled = window.pageYOffset || document.documentElement.scrollTop;
+            scrolled += window.innerHeight;
+            var body = document.body,
+                    html = document.documentElement;
+
+            var height = Math.max(body.scrollHeight, body.offsetHeight,
+                    html.clientHeight, html.scrollHeight, html.offsetHeight);
+            if (scrolled >= height) {
+                buttonPushed();
+            }
+            document.getElementById('showScroll').innerHTML = scrolled + 'px';
+        }
 
         // xmlhttp.onreadystatechange = GetArticles;
         // the receive function will be triggered once the ajax
@@ -245,7 +335,9 @@
                     aria-expanded="false" aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
             </button>
-            <a class="topico navbar-brand" href="#">DMD Pr&#160;<span class="glyphicon glyphicon-globe"></span>&#160;ject</a>
+            <a class="topico navbar-brand" href="#">DMD Pr&#160;<span class="glyphicon glyphicon-globe"></span>&#160;ject
+                <p id="showScroll"></p></a>
+
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
@@ -973,12 +1065,11 @@
 
                     <!--TODO Lazy loading-->
 
-                    <div id="forin">
-                        <!--<div class="scroll">-->
-                        <!--<div id="scrolly" class="next jscroll-next-parent" style="display: none;">-->
 
-                        <!--</div>-->
-                        <!--</div>-->
+                    <div class="content">
+                        <div id="forin">
+
+                        </div>
                     </div>
 
                     <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button"
@@ -1059,7 +1150,6 @@
 
             return false;
         });
-        ;
         $('#article_insert').formValidation({
             framework: 'bootstrap',
             icon: {
@@ -1102,6 +1192,7 @@
                 }
             }
         }).on('success.form.fv', function (e) {
+            console.log('valid');
             e.preventDefault();
             var $form = $(e.target),        // The form instance
                     fv = $(e.target).data('formValidation'); // FormValidation instance
