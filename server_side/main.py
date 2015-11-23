@@ -23,6 +23,7 @@ if __name__ == '__main__':
         # venueId = cur.fetchall()[0][0]
 
         for author in p.authors:
+            pass
             # cur.execute(generator.insertIntoAuthors(author))
             # conn.commit()
             # cur.execute(generator.getAuthor(author))
@@ -31,6 +32,7 @@ if __name__ == '__main__':
         # cur.execute(generator.insertIntoArticles(p.index, p.title, p.year, venueId))
         # conn.commit()
         for reference in p.references:
+            pass
             # cur.execute(generator.insertIntoLink(p.index, reference))
             # conn.commit()
         counter += 1
