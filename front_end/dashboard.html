@@ -138,43 +138,6 @@
 
         }
 
-        // This will render the two output which substitute the
-        // elements id="raw" and id="forin"
-        //        function receive() {
-        //            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        //                // var jsonobj = eval ("(" + xmlhttp.responseText + ")");
-        //                var jsonobj = JSON.parse(xmlhttp.responseText);
-        //
-        ////                var output = xmlhttp.responseText;
-        //                //document.getElementById("raw").innerHTML = output;
-        //
-        //                var output = "<div class=\"table-responsive\">" +
-        //                        "<table class=\"table table-striped\">" +
-        //                        "<thead>" +
-        //                        "<tr>";
-        //                for (var j = 0; j < jsonobj['req'][0].length; j++) {
-        //                    output += "<th>" + jsonobj['req'][0][j] + "</th>";
-        //                }
-        //                output += "</tr>" +
-        //                        "</thead>";
-        //
-        //                for (var i = 1; i < jsonobj['req'].length; i++) {
-        //                    output += '<tr>';
-        //                    for (var j = 0; j < jsonobj['req'][0].length; j++) {
-        //                        output += '<td>' + jsonobj['req'][i][j] + '</td>';
-        //                    }
-        //                    output += '</tr>';
-        //                }
-        //
-        //                output += "</tbody> </table>";
-        //                document.getElementById("forin").innerHTML = output;
-        //
-        //            }
-        //        }
-
-
-        //        xmlhttp.onload = receive;
-
         var last;
         function returnLastButton() {
             last = event.currentTarget.value;
@@ -186,10 +149,8 @@
             number = 0;
             createTable();
             buttonPushed();
-            toIterate = 1;
-            now = 0;
+            toIterate = true;
             numberOfTyples = 0;
-//            generateLink();
         }
 
 
@@ -247,11 +208,10 @@
 
         var numberOfTyples;
         var pageSize = 20;
-        var toIterate = 1;
-        var now;
+        var toIterate = true;
 
         function load_new() {
-            if (now < toIterate) {
+            if (toIterate) {
                 console.log("in Ajax", generateLink());
                 var dict = form_params(currentId);
                 dict['page'] = number;
@@ -274,20 +234,18 @@
                             if (!isHeadAdded) {
                                 addHead("tableOfData", jsonobj);
                                 numberOfTyples = jsonobj['req'].length - 1;
-                                toIterate = (numberOfTyples - numberOfTyples % pageSize) / pageSize;
-                                if (numberOfTyples % pageSize > 0) {
-                                    toIterate += 1;
+                                if (numberOfTyples % pageSize > 0 || numberOfTyples == 0) {
+                                    toIterate = false;
                                 }
                             }
                             addRow("tableOfData", jsonobj);
-                            now++;
                             console.log('data append', jsonobj);
 
-                            // Вызываем плагин
-                            $("#content").jscroll({
-                                autoTriggerUntil: 2,
-                                debug: true
-                            });
+//                            // Вызываем плагин
+//                            $("#content").jscroll({
+//                                autoTriggerUntil: 2,
+//                                debug: true
+//                            });
                         }
                     }
                 };
@@ -432,8 +390,8 @@
                                             </div>
 
                                             <div class="btn-group">
-                                                <button type="submit" class="btn btn-primary"
-                                                        onClick="returnLastButton();" value="Select">
+                                                <button class="btn btn-primary" onClick="returnLastButton();"
+                                                        value="Select">
                                             <span class="glyphicon glyphicon-search">
                                             </span>
                                                     &#160;Select
@@ -529,14 +487,14 @@
                                             </div>
 
                                             <div class="btn-group">
-                                                <button type="submit" class="btn btn-primary"
-                                                        onClick="returnLastButton();" value="Update">
+                                                <button class="btn btn-success" onClick="returnLastButton();"
+                                                        value="Update">
                                             <span class="glyphicon glyphicon-refresh">
                                             </span>
                                                     &#160;Update
                                                 </button>
-                                                <button type="submit" class="btn btn-primary"
-                                                        onClick="returnLastButton();" value="Show">
+                                                <button class="btn btn-primary" onClick="returnLastButton();"
+                                                        value="Show">
                                             <span class="glyphicon glyphicon-eye-open">
                                             </span>
                                                     &#160;Show
@@ -1150,6 +1108,7 @@
 
             return false;
         });
+
         $('#article_insert').formValidation({
             framework: 'bootstrap',
             icon: {
