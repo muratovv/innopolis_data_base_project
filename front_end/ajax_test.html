@@ -1,6 +1,10 @@
+
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+
+
 
     <script type="text/javascript">
         var xmlhttp;
@@ -14,15 +18,19 @@
             xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
 
-        // This will render the two output which substitute the
-        // elements id="raw" and id="forin"
-        function receive() {
+
+        function receive_ag() {
+            var json = {"io": "1000", "mem": "12", "cpu": "33"};
+        document.getElementById("info").innerHTML = "Average parameters per specified time block:";
+        document.getElementById("io_average").innerHTML = "I/O disk:" + " " + json["io"];
+        document.getElementById("mem_average").innerHTML = "Memory space:" + " " + json["mem"];
+        document.getElementById("cpu_average").innerHTML = "CPU time:" + " " + json["cpu"];
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 // var jsonobj = eval ("(" + xmlhttp.responseText + ")");
                 var jsonobj = JSON.parse(xmlhttp.responseText);
 
                 var output = xmlhttp.responseText;
-                document.getElementById("raw").innerHTML = output;
+
 
                 output = "";
 
@@ -32,16 +40,16 @@
                     output += '</p>';
                 }
 
-                document.getElementById("forin").innerHTML = output;
+
 
             } else {
                 alert("data not available");
             }
         }
 
-        xmlhttp.onload = receive;
+        xmlhttp.onload = receive_ag;
 
-        function sendFrom(id) {
+        function request_ag(id) {
             var dict = form_params(id);
             var query = generateQuery(dict);
             console.log(query);
@@ -99,20 +107,32 @@
 
 <body>
 
-<form id="form" class="myClass">
-    First name: <input type="text" name="fname"><br>
-    <button onClick="sendFrom(document.getElementById('form')); return false;" id="btn">Submit
-    </button>
-    <br>
-</form>
 
-<p>The raw result from the ajax json request is:</p>
 
-<div id="raw"></div>
-<br/>
+<h2>Aggregated values</h2>
 
-<p>The for cycle produces :</p>
+                            <p>Input unit time block that you are interested in:</p>
 
-<div id="forin"></div>
+                            <form id="aggregated" class="myClass">
+                                <input type="text" name="time_block"><br> <br>
+                                <button onClick="request_ag(document.getElementById('aggregated')); return false; " class="btn btn-primary"
+                                        id="time_block_btn">Show values
+                                </button>
+                                <br>
+                            </form>
+                            <br>
+
+
+                            <div id="info"></div>
+                            <br/>
+
+                            <div id="io_average"></div>
+                            <br/>
+
+                            <div id="mem_average"></div>
+                            <br/>
+
+                            <div id="cpu_average"></div>
+
 </body>
 </html>
