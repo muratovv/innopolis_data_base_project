@@ -189,7 +189,7 @@ def dashboard1_parse(query=None):
     io_stat = get_stat(0, len(io), 1, io)[0]
     mem_stat = get_stat(0, len(mem), 1, mem)[0]
     cpy_stat = get_stat(0, len(cpy), 1, cpy)[0]
-    return {"io": io_stat, "mem": mem_stat, "cpy": cpy_stat}
+    return {"io": io_stat, "mem": mem_stat, "cpu": cpy_stat}
 
 
 def dashboard2_parse(query=None):
@@ -199,7 +199,7 @@ def dashboard2_parse(query=None):
     io_stat = sum(get_stat(0, len(io), k, io)) / k
     mem_stat = sum(get_stat(0, len(mem), k, mem)) / k
     cpy_stat = sum(get_stat(0, len(cpy), k, cpy)) / k
-    return {"io": io_stat, "mem": mem_stat, "cpy": cpy_stat}
+    return {"io": io_stat, "mem": mem_stat, "cpu": cpy_stat}
 
 
 def dashboard3_parse(query=None):
@@ -211,7 +211,7 @@ def dashboard3_parse(query=None):
     io_stat = get_stat(f, t, k, io)
     mem_stat = get_stat(f, t, k, mem)
     cpy_stat = get_stat(f, t, k, cpy)
-    return {"io": io_stat, "mem": mem_stat, "cpy": cpy_stat}
+    return {"io": io_stat, "mem": mem_stat, "cpu": cpy_stat}
 
 
 #####
