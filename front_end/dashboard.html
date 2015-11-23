@@ -466,7 +466,7 @@
 
 
         loadTimeChart(function () {
-            drawTimeChart(1);
+            drawTimeChart([["Time","I/O disk","Memory","CPU time"],[1,2,3,4],[2,2,3,4],[3,2,3,4],[4,2,3,4]]);
         });
         function loadTimeChart(myCallback) {
             google.load("visualization", "1.1", {packages: ["bar"], callback: myCallback});
@@ -534,7 +534,7 @@
             from = dict["from"]
             to = dict["to"]
             time_block = dict["time_block"]
-            xmlhttp.open("POST", "/getallitems.json?" + "action=get_ag_per&from=" + from + "&to=" + to + "&time_block=" + time_block, true);
+            xmlhttp.open("POST", "/getallitems.json?" + "action=get_ag_per&from=" + from + "&to=" + to + "&k=" + time_block, true);
             xmlhttp.send();
         }
         function form_params(form) {
@@ -608,7 +608,7 @@
             <ul class="nav nav-pills nav-stacked col-md-2">
                 <li class="active"><a href="#tab1" data-toggle="tab">Records manipulator</a></li>
                 <li><a href="#tab2" data-toggle="tab">SQL queries console</a></li>
-                <li><a href="#tab3" data-toggle="tab">Graphics</a></li>
+                <li><a href="#tab3" data-toggle="tab">Performance Dashboard</a></li>
             </ul>
 
             <div class="tab-content col-md-9">
