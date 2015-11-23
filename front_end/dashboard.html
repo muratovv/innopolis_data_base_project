@@ -172,6 +172,7 @@
         function form_params(form) {
             var params = [];
             var el = document.getElementById("navigation");
+            console.log("YOYOYPY");
             var length = form.elements.length;
             params["formname"] = form.name;
             params["page_size"] = 20;
@@ -327,7 +328,8 @@
 
         var io_max, mem_max, cpu_max, io_yellow, mem_yellow, cpu_yellow, io_red, mem_red, cpu_red;
         function request_av(id) {
-            var dict = form_params(id);
+            var dict = form_params_perf(id);
+            currentId = id;
             io_max = dict["io_max"];
             mem_max = dict["mem_max"];
             cpu_max = dict["cpu_max"];
@@ -341,7 +343,7 @@
             xmlhttp.send();
             xmlhttp.onload = receive_av;
         }
-        function form_params(form) {
+        function form_params_perf(form) {
             var params = [];
             var length = form.elements.length;
             for (var i = 0; i < length; i++) {
@@ -439,13 +441,14 @@
 
 
         function request_ag(id) {
-            var dict = form_params(id);
+            var dict = form_params_perf_2(id);
+            currentId = id;
             xmlhttp.open("POST", "/getallitems.json?" + "&action=get_ag&k=" + dict["time_block"], true);
             xmlhttp.send();
             xmlhttp.onload = receive_ag;
         }
 
-        function form_params(form) {
+        function form_params_perf_2(form) {
             var params = [];
             var length = form.elements.length;
             for (var i = 0; i < length; i++) {
@@ -553,7 +556,8 @@
         var from, to, time_block;
 
         function request_ag_per(id) {
-            var dict = form_params(id);
+            var dict = form_params_per3(id);
+            currentId = id;
             from = dict["from"]
             to = dict["to"]
             time_block = dict["time_block"]
@@ -561,7 +565,7 @@
             xmlhttp.send();
             xmlhttp.onload = receive_ag_per;
         }
-        function form_params(form) {
+        function form_params_per3(form) {
             var params = [];
             var length = form.elements.length;
             for (var i = 0; i < length; i++) {
