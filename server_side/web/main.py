@@ -1,5 +1,7 @@
 import psycopg2
 from bottle import *
+from server_side.bd_work import get_stat
+from server_side.bd_work import io, mem, cpy, get_stat
 
 front_end_path = '../../front_end/'
 
@@ -119,7 +121,13 @@ def shop_aj_getallitems():
 def parse_request(request_dict=None):
     if not request_dict:
         request_dict = {}
-    if request_dict.get('formname', None) != 'SQLQueryexecutor':
+    if request_dict.get('action', None) == 'get_AV':
+        return dashboard1_parse(request_dict)
+    elif request_dict.get('action', None) == 'get_ag':
+        return dashboard2_parse(request_dict)
+    elif request_dict.get('action', None) == 'get_ag_per':
+        return dashboard3_parse(request_dict)
+    elif request_dict.get('formname', None) != 'SQLQueryexecutor':
         return table_request(request_dict)
     elif request_dict.get('formname', None == 'SQLQueryexecutor'):
         return console_request(request_dict)
@@ -171,6 +179,37 @@ def prepare_request(request_dict=None):
         except ValueError:
             pass
     return request_dict
+
+
+def dashboard1_parse(query=None):
+    if not query:
+        query = {}
+    io_stat = get_stat(0, len(io), 1, io)[0]
+    mem_stat = get_stat(0, len(mem), 1, mem)[0]
+    cpy_stat = get_stat(0, len(cpy), 1, cpy)[0]
+    return {"io": io_stat, "mem": mem_stat, "cpy": cpy_stat}
+
+
+def dashboard2_parse(query=None):
+    if not query:
+        query = {}
+    k = query['k']
+    io_stat = get_stat(0, len(io), k, io)
+    mem_stat = get_stat(0, len(mem), k, mem)
+    cpy_stat = get_stat(0, len(cpy), k, cpy)
+    return {"io": io_stat, "mem": mem_stat, "cpy": cpy_stat}
+
+
+def dashboard3_parse(query=None):
+    if not query:
+        query = {}
+    k = query['k']
+    f = query['from']
+    t = query['to']
+    io_stat = get_stat(f, t, k, io)
+    mem_stat = get_stat(f, t, k, mem)
+    cpy_stat = get_stat(f, t, k, cpy)
+    return {"io": io_stat, "mem": mem_stat, "cpy": cpy_stat}
 
 
 #####
