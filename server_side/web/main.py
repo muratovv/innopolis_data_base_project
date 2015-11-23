@@ -97,4 +97,4 @@ def shop_aj_getallitems():
 
 if __name__ == '__main__':
     TEMPLATE_PATH.append(front_end_path)
-    run(host='localhost', port=8081, debug=True)
+    run(host='localhost', port=8080, debug=True)

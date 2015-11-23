@@ -155,7 +155,6 @@
 
         function generateLink() {
             var dict = form_params(currentId);
-            number++;
             dict['page'] = number;
             console.log(dict);
             return dict;
@@ -271,6 +270,21 @@
             }
         }
 
+        function tablesWindow() {
+            document.getElementById("forin").innerHTML = '<div class="content"> </div>';
+        }
+
+        function tablesClear() {
+            document.getElementById("forin").innerHTML = ' ';
+        }
+
+        function healthWindow() {
+            document.getElementById("forin").innerHTML = ' <div class="col-md-4"> <div id="chart_div_io"></div> </div> <div class="col-md-4"> <div id="chart_div_mem"></div> </div> <div class="col-md-4"> <div id="chart_div_cpu"></div> </div> ';
+        }
+
+        function timeWindow() {
+            document.getElementById("forin").innerHTML = '<div id="columnchart_material" style="width: 900px; height: 500px;"></div>';
+        }
         // xmlhttp.onreadystatechange = GetArticles;
         // the receive function will be triggered once the ajax
         // request is terminated.
@@ -280,13 +294,11 @@
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
     <script type="text/javascript">
-        loadGaugeChart(function () {
-            drawGaugeChart(1, 1, 1, 1000, 1000, 1000, 50, 50, 50, 70, 70, 70);
-        });
+
         function loadGaugeChart(myCallback) {
             google.load("visualization", "1", {packages: ["gauge"], callback: myCallback});
         }
-        google.setOnLoadCallback(drawGaugeChart);
+
         var xmlhttp;
         if (window.XMLHttpRequest) {
             // code for IE7+, Firefox, Chrome, Opera, Safari 
@@ -297,30 +309,37 @@
         }
         function receive_av() {
             var json = {"io": "90", "mem": "10", "cpu": "10"};
+            loadGaugeChart(function () {
+//            drawGaugeChart(1, 1, 1, 1000, 1000, 1000, 50, 50, 50, 70, 70, 70);});
+                drawGaugeChart(parseInt(json["io"]), parseInt(json["mem"]), parseInt(json["cpu"]), io_max, mem_max, cpu_max, io_yellow, mem_yellow, cpu_yellow, io_red, mem_red, cpu_red)
+            });
+            google.setOnLoadCallback(drawGaugeChart);
+            console.log("smfng");
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 var jsonobj = JSON.parse(xmlhttp.responseText);
-                drawGaugeChart(parseInt(json["io"]), parseInt(json["mem"]), parseInt(json["cpu"]), io_max, mem_max, cpu_max, io_yellow, mem_yellow, cpu_yellow, io_red, mem_red, cpu_red);
+//                drawGaugeChart(parseInt(json["io"]), parseInt(json["mem"]), parseInt(json["cpu"]), io_max, mem_max, cpu_max, io_yellow, mem_yellow, cpu_yellow, io_red, mem_red, cpu_red);
                 var output = xmlhttp.responseText;
                 //document.getElementById("raw").innerHTML = output;   
             } else {
                 alert("data not available");
             }
         }
-        xmlhttp.onload = receive_av;
+
         var io_max, mem_max, cpu_max, io_yellow, mem_yellow, cpu_yellow, io_red, mem_red, cpu_red;
         function request_av(id) {
             var dict = form_params(id);
-            io_max = dict["io_max"]
-            mem_max = dict["mem_max"]
-            cpu_max = dict["cpu_max"]
-            io_yellow = dict["io_yellow"]
-            mem_yellow = dict["mem_yellow"]
-            cpu_yellow = dict["cpu_yellow"]
-            io_red = dict["io_red"]
-            mem_red = dict["mem_red"]
-            cpu_red = dict["cpu_red"]
+            io_max = dict["io_max"];
+            mem_max = dict["mem_max"];
+            cpu_max = dict["cpu_max"];
+            io_yellow = dict["io_yellow"];
+            mem_yellow = dict["mem_yellow"];
+            cpu_yellow = dict["cpu_yellow"];
+            io_red = dict["io_red"];
+            mem_red = dict["mem_red"];
+            cpu_red = dict["cpu_red"];
             xmlhttp.open("POST", "/getallitems.json?" + "action=get_AV", true);
             xmlhttp.send();
+            xmlhttp.onload = receive_av;
         }
         function form_params(form) {
             var params = [];
@@ -407,7 +426,7 @@
 
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 // var jsonobj = eval ("(" + xmlhttp.responseText + ")");
-                var jsonobj = JSON.parse(xmlhttp.responseText);
+//                var jsonobj = JSON.parse(xmlhttp.responseText);
                 document.getElementById("info").innerHTML = "Average parameters per specified time block:";
                 document.getElementById("io_average").innerHTML = "I/O disk:" + " " + json["io"];
                 document.getElementById("mem_average").innerHTML = "Memory space:" + " " + json["mem"];
@@ -417,12 +436,13 @@
             }
         }
 
-        xmlhttp.onload = receive_ag;
+
 
         function request_ag(id) {
             var dict = form_params(id);
             xmlhttp.open("POST", "/getallitems.json?" + "&action=get_ag&k=" + dict["time_block"], true);
             xmlhttp.send();
+            xmlhttp.onload = receive_ag;
         }
 
         function form_params(form) {
@@ -465,13 +485,11 @@
     <script type="text/javascript">
 
 
-        loadTimeChart(function () {
-            drawTimeChart([["Time","I/O disk","Memory","CPU time"],[1,2,3,4],[2,2,3,4],[3,2,3,4],[4,2,3,4]]);
-        });
+
         function loadTimeChart(myCallback) {
             google.load("visualization", "1.1", {packages: ["bar"], callback: myCallback});
         }
-        google.setOnLoadCallback(drawTimeChart);
+
 
         var xmlhttp;
 
@@ -490,6 +508,11 @@
                 "mem": [0, 1, 2, 3],
                 "cpu": [0, 1, 2, 3]
             }
+            loadTimeChart(function () {
+                drawTimeChart([["Time", "I/O disk", "Memory", "CPU time"], [1, 2, 3, 4], [2, 2, 3, 4], [3, 2, 3, 4], [4, 2, 3, 4]]);
+            });
+            google.setOnLoadCallback(drawTimeChart);
+
             var x = new Array(json["io"].length);
             for (var i = 0; i < json["io"].length; i++) {
                 x[i] = new Array(4);
@@ -526,7 +549,7 @@
             }
         }
 
-        xmlhttp.onload = receive_ag_per;
+
         var from, to, time_block;
 
         function request_ag_per(id) {
@@ -536,12 +559,13 @@
             time_block = dict["time_block"]
             xmlhttp.open("POST", "/getallitems.json?" + "action=get_ag_per&from=" + from + "&to=" + to + "&k=" + time_block, true);
             xmlhttp.send();
+            xmlhttp.onload = receive_ag_per;
         }
         function form_params(form) {
             var params = [];
             var length = form.elements.length;
             for (var i = 0; i < length; i++) {
-                element = form.elements[i];
+                var element = form.elements[i];
                 if (element.tagName == 'TEXTAREA') {
                     params[element.name] = element.value
                 } else if (element.tagName == 'INPUT') {
@@ -606,9 +630,10 @@
 
         <div class="tabbable">
             <ul class="nav nav-pills nav-stacked col-md-2">
-                <li class="active"><a href="#tab1" data-toggle="tab">Records manipulator</a></li>
-                <li><a href="#tab2" data-toggle="tab">SQL queries console</a></li>
-                <li><a href="#tab3" data-toggle="tab">Performance Dashboard</a></li>
+                <li class="active"><a href="#tab1" onclick="tablesWindow();" data-toggle="tab">Records manipulator</a>
+                </li>
+                <li><a href="#tab2" onclick="tablesWindow();" data-toggle="tab">SQL queries console</a></li>
+                <li><a href="#tab3" onclick="healthWindow();" data-toggle="tab">Performance Dashboard</a></li>
             </ul>
 
             <div class="tab-content col-md-9">
@@ -1299,11 +1324,12 @@
                     <h2>Performance Dashboard</h2>
 
                     <ul id="myTab3" class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#guage"><span
+                        <li class="active"><a data-toggle="tab" onclick="healthWindow();" href="#guage"><span
                                 class="glyphicon glyphicon-dashboard"></span></a></li>
-                        <li><a data-toggle="tab" href="#aggregated_values"><span
+                        <li><a data-toggle="tab" onclick="tablesClear();" href="#aggregated_values"><span
                                 class="glyphicon glyphicon-text-background"></span></a></li>
-                        <li><a data-toggle="tab" href="#sweep"><span class="glyphicon glyphicon-hourglass"></span></a>
+                        <li><a data-toggle="tab" onclick="timeWindow();" href="#sweep"><span
+                                class="glyphicon glyphicon-hourglass"></span></a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -1374,22 +1400,11 @@
                                         <span class="input-group-addon">red cpu</span>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary">Show health
+                                <button class="btn btn-primary" value="Health">Show health
                                 </button>
                                 <br>
                             </form>
 
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div id="chart_div_io"></div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div id="chart_div_mem"></div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div id="chart_div_cpu"></div>
-                                </div>
-                            </div>
 
 
                         </div>
@@ -1397,15 +1412,21 @@
                         <div id="aggregated_values" class="tab-pane fade">
                             <h2>Aggregated values</h2>
 
-                            <p>Input unit time block that you are interested in:</p>
-
                             <form id="aggregated" class="myClass">
-                                <input type="text" name="time_block"><br> <br>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control"
+                                               name="time_block"
+                                               placeholder="Input unit time block that you are interested in">
+                                        <span class="input-group-addon">time unit</span>
+                                    </div>
+                                </div>
+
                                 <button onClick="request_ag(document.getElementById('aggregated')); return false; "
                                         class="btn btn-primary"
                                         id="time_block_btn">Show values
                                 </button>
-                                <br>
+
                             </form>
                             <br>
 
@@ -1427,19 +1448,21 @@
                         <div id="sweep" class="tab-pane fade">
                             <h2>Sweep</h2>
 
-                            <form id="aggregated_period" class="myClass">
-                                <input type="text" name="from"><br> <br>
-                                <input type="text" name="to"><br> <br>
-                                <input type="text" name="time_block"><br> <br>
+                            <form id="aggregated_period" class="form-horizontal" role="form">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="from">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="to">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="time_block">
+                                </div>
                                 <button onClick="request_ag_per(document.getElementById('aggregated_period')); return false; "
                                         class="btn btn-primary">Show values
                                 </button>
-                                <br>
                             </form>
-                            <br>
 
-
-                            <div id="columnchart_material" style="width: 900px; height: 500px;"></div>
                         </div>
                     </div>
                 </div>
@@ -1450,14 +1473,13 @@
 
                     <div class="col-md-2 col-md-offset-5"></div>
 
-                    <h2 class="sub-header"> Result</h2>
+                    <h2 class="sub-header"></h2>
 
-                    <div class="content">
-                        <div id="forin">
+                    <div id="forin">
+                        <div class="content">
 
                         </div>
                     </div>
-
                     <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button"
                        title="Click to return on the top page" data-toggle="tooltip" data-placement="left">
                         <span class="glyphicon glyphicon-chevron-up"></span>
@@ -1957,6 +1979,148 @@
             sendFrom(document.getElementById('links_delete'));
             return false;
         });
+
+        $('#max_and_thresholds').formValidation({
+            framework: 'bootstrap',
+            fields: {
+                io_max: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                },
+                mem_max: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                },
+                cpu_max: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        }
+                    }
+                },
+                io_yellow: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        },
+                        between: {
+                            min: 0,
+                            max: 100,
+                            message: 'The value must be between 0 and 100'
+                        }
+                    }
+                },
+                mem_yellow: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        },
+                        between: {
+                            min: 0,
+                            max: 100,
+                            message: 'The value must be between 0 and 100'
+                        }
+                    }
+                },
+                cpu_yellow: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        },
+                        between: {
+                            min: 0,
+                            max: 100,
+                            message: 'The value must be between 0 and 100'
+                        }
+                    }
+                },
+                io_red: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        },
+                        between: {
+                            min: 0,
+                            max: 100,
+                            message: 'The value must be between 0 and 100'
+                        }
+                    }
+                },
+                mem_red: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        },
+                        between: {
+                            min: 0,
+                            max: 100,
+                            message: 'The value must be between 0 and 100'
+                        }
+                    }
+                },
+                cpu_red: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The id is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'The id can only consist of integers'
+                        },
+                        between: {
+                            min: 0,
+                            max: 100,
+                            message: 'The value must be between 0 and 100'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            request_av(document.getElementById('max_and_thresholds'));
+            return false;
+        });
+
         $('.scroll').jscroll();
 
         $(window).scroll(function () {

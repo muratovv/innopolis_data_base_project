@@ -4,8 +4,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
 
-
-
     <script type="text/javascript">
         var xmlhttp;
 
@@ -21,10 +19,10 @@
 
         function receive_ag() {
             var json = {"io": "1000", "mem": "12", "cpu": "33"};
-        document.getElementById("info").innerHTML = "Average parameters per specified time block:";
-        document.getElementById("io_average").innerHTML = "I/O disk:" + " " + json["io"];
-        document.getElementById("mem_average").innerHTML = "Memory space:" + " " + json["mem"];
-        document.getElementById("cpu_average").innerHTML = "CPU time:" + " " + json["cpu"];
+            document.getElementById("info").innerHTML = "Average parameters per specified time block:";
+            document.getElementById("io_average").innerHTML = "I/O disk:" + " " + json["io"];
+            document.getElementById("mem_average").innerHTML = "Memory space:" + " " + json["mem"];
+            document.getElementById("cpu_average").innerHTML = "CPU time:" + " " + json["cpu"];
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 // var jsonobj = eval ("(" + xmlhttp.responseText + ")");
                 var jsonobj = JSON.parse(xmlhttp.responseText);
@@ -108,31 +106,30 @@
 <body>
 
 
-
 <h2>Aggregated values</h2>
 
-                            <p>Input unit time block that you are interested in:</p>
+<p>Input unit time block that you are interested in:</p>
 
-                            <form id="aggregated" class="myClass">
-                                <input type="text" name="time_block"><br> <br>
-                                <button onClick="request_ag(document.getElementById('aggregated')); return false; " class="btn btn-primary"
-                                        id="time_block_btn">Show values
-                                </button>
-                                <br>
-                            </form>
-                            <br>
+<form id="aggregated" class="myClass">
+    <input type="text" name="time_block"><br> <br>
+    <button onClick="request_ag(document.getElementById('aggregated')); return false; " class="btn btn-primary"
+            id="time_block_btn">Show values
+    </button>
+    <br>
+</form>
+<br>
 
 
-                            <div id="info"></div>
-                            <br/>
+<div id="info"></div>
+<br/>
 
-                            <div id="io_average"></div>
-                            <br/>
+<div id="io_average"></div>
+<br/>
 
-                            <div id="mem_average"></div>
-                            <br/>
+<div id="mem_average"></div>
+<br/>
 
-                            <div id="cpu_average"></div>
+<div id="cpu_average"></div>
 
 </body>
 </html>
