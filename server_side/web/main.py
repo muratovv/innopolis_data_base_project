@@ -115,7 +115,9 @@ def jsontest():
 def shop_aj_getallitems():
     req = dict(prepare_request(request.query))
     print("REQUEST" + str(req))
-    return parse_request(req)
+    answer = parse_request(req)
+    print("ANSWER", answer)
+    return answer
 
 
 def parse_request(request_dict=None):
@@ -194,9 +196,9 @@ def dashboard2_parse(query=None):
     if not query:
         query = {}
     k = query['k']
-    io_stat = get_stat(0, len(io), k, io)
-    mem_stat = get_stat(0, len(mem), k, mem)
-    cpy_stat = get_stat(0, len(cpy), k, cpy)
+    io_stat = sum(get_stat(0, len(io), k, io)) / k
+    mem_stat = sum(get_stat(0, len(mem), k, mem)) / k
+    cpy_stat = sum(get_stat(0, len(cpy), k, cpy)) / k
     return {"io": io_stat, "mem": mem_stat, "cpy": cpy_stat}
 
 
