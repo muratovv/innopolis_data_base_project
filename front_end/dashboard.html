@@ -507,19 +507,10 @@
 
         function receive_ag_per() {
 
-            var json = {
-                "io": [0, 1, 2, 3],
-                "mem": [0, 1, 2, 3],
-                "cpu": [0, 1, 2, 3]
-            }
-            loadTimeChart(function () {
-                drawTimeChart([["Time", "I/O disk", "Memory", "CPU time"], [1, 2, 3, 4], [2, 2, 3, 4], [3, 2, 3, 4], [4, 2, 3, 4]]);
-            });
-            google.setOnLoadCallback(drawTimeChart);
 
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 var jsonobj = JSON.parse(xmlhttp.responseText);
-                drawTimeChart(x);
+
                 var output = xmlhttp.responseText;
             var x = new Array(json["io"].length);
             for (var i = 0; i < json["io"].length; i++) {
@@ -546,8 +537,11 @@
                     }
                 }
             }
+                loadTimeChart(function () {
+                    drawTimeChart(x);
+                });
 
-
+                google.setOnLoadCallback(drawTimeChart);
                 //document.getElementById("raw").innerHTML = output;   
             } else {
                 alert("data not available");
