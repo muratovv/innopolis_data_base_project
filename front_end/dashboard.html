@@ -328,8 +328,8 @@
 
         var io_max, mem_max, cpu_max, io_yellow, mem_yellow, cpu_yellow, io_red, mem_red, cpu_red;
         function request_av(id) {
-            var dict = form_params_perf(id);
             currentId = id;
+            var dict = form_params_perf(currentId);
             io_max = dict["io_max"];
             mem_max = dict["mem_max"];
             cpu_max = dict["cpu_max"];
@@ -441,8 +441,8 @@
 
 
         function request_ag(id) {
-            var dict = form_params_perf_2(id);
             currentId = id;
+            var dict = form_params_perf_2(currentId);
             xmlhttp.open("POST", "/getallitems.json?" + "&action=get_ag&k=" + dict["time_block"], true);
             xmlhttp.send();
             xmlhttp.onload = receive_ag;
@@ -516,10 +516,18 @@
             });
             google.setOnLoadCallback(drawTimeChart);
 
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var jsonobj = JSON.parse(xmlhttp.responseText);
+                drawTimeChart(x);
+                var output = xmlhttp.responseText;
             var x = new Array(json["io"].length);
             for (var i = 0; i < json["io"].length; i++) {
                 x[i] = new Array(4);
             }
+                x[0][0] = "Time";
+                x[0][1] = "I/O disk";
+                x[0][2] = "Memory";
+                x[0][3] = "CPU time";
             for (var i = 1; i < json["io"].length; i++) {
                 for (var j = 0; j <= 3; j++) {
                     if (j == 0) {
@@ -527,25 +535,18 @@
                         x[i][j] = parseInt(from) + i * parseInt(time_block) - 1;
                     }
                     if (j == 1) {
-                        x[i][j] = parseInt(json["io"][i]);
+                        x[i][j] = parseInt(jsonobj["io"][i]);
                     }
                     if (j == 2) {
-                        x[i][j] = parseInt(json["mem"][i]);
+                        x[i][j] = parseInt(jsonobj["mem"][i]);
                     }
                     if (j == 3) {
-                        x[i][j] = parseInt(json["cpu"][i]);
+                        x[i][j] = parseInt(jsonobj["cpu"][i]);
                     }
                 }
             }
-            x[0][0] = "Time";
-            x[0][1] = "I/O disk";
-            x[0][2] = "Memory";
-            x[0][3] = "CPU time";
 
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                var jsonobj = JSON.parse(xmlhttp.responseText);
-                drawTimeChart(x);
-                var output = xmlhttp.responseText;
+
                 //document.getElementById("raw").innerHTML = output;   
             } else {
                 alert("data not available");
@@ -556,15 +557,16 @@
         var from, to, time_block;
 
         function request_ag_per(id) {
-            var dict = form_params_per3(id);
             currentId = id;
+            var dict = form_params_per3(currentId);
             from = dict["from"]
             to = dict["to"]
-            time_block = dict["time_block"]
+            time_block = dict["period"]
             xmlhttp.open("POST", "/getallitems.json?" + "action=get_ag_per&from=" + from + "&to=" + to + "&k=" + time_block, true);
             xmlhttp.send();
             xmlhttp.onload = receive_ag_per;
         }
+        
         function form_params_per3(form) {
             var params = [];
             var length = form.elements.length;
@@ -1404,7 +1406,7 @@
                                         <span class="input-group-addon">red cpu</span>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary" value="Health">Show health
+                                <button class="btn btn-primary" onClick="returnLastButton();" value="Health">Show health
                                 </button>
                                 <br>
                             </form>
@@ -1426,7 +1428,7 @@
                                     </div>
                                 </div>
 
-                                <button onClick="request_ag(document.getElementById('aggregated')); return false; "
+                                <button onClick="returnLastButton();request_ag(document.getElementById('aggregated')); return false; "
                                         class="btn btn-primary"
                                         id="time_block_btn">Show values
                                 </button>
@@ -1452,18 +1454,26 @@
                         <div id="sweep" class="tab-pane fade">
                             <h2>Sweep</h2>
 
-                            <form id="aggregated_period" class="form-horizontal" role="form">
+                            <form id="aggregated_period" name="aggregated_period" class="form-horizontal" role="form">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" name="from">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="from" placeholder="from">
+                                        <span class="input-group-addon">From</span>
+                                    </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control" name="to">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="to" placeholder="to">
+                                        <span class="input-group-addon">To</span>
+                                    </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control" name="time_block">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="period" placeholder="period">
+                                        <span class="input-group-addon">Period</span>
+                                    </div>
                                 </div>
-                                <button onClick="request_ag_per(document.getElementById('aggregated_period')); return false; "
-                                        class="btn btn-primary">Show values
+                                <button class="btn btn-primary" onClick="returnLastButton();">Show values
                                 </button>
                             </form>
 
@@ -2124,6 +2134,54 @@
             request_av(document.getElementById('max_and_thresholds'));
             return false;
         });
+
+        $('#aggregated_period').formValidation({
+            framework: 'bootstrap',
+            fields: {
+                from: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Value is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'Value can only consist of integers'
+                        }
+                    }
+                },
+                to: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Value is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'Value can only consist of integers'
+                        }
+                    }
+                },
+                period: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Value is required'
+                        },
+                        regexp: {
+                            regexp: /^\d+$/,
+                            message: 'Value can only consist of integers'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target),        // The form instance
+                    fv = $(e.target).data('formValidation'); // FormValidation instance
+            request_ag_per(document.getElementById('aggregated_period'));
+            return false;
+        });
+
+
+        aggregated_period
 
         $('.scroll').jscroll();
 
