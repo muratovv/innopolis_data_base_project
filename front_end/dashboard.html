@@ -15,8 +15,7 @@
     <link href="static/css/dashboard.css" rel="stylesheet">
     <link href="static/css/bootstrap.vertical-tabs.css" rel="stylesheet">
     <link href="static/css/buttons.css" rel="stylesheet">
-    <link rel="stylesheet" href="static/css/slick.grid.css" type="text/css"/>
-    <link rel="stylesheet" href="static/formvalidation/dist/css/formValidation.min.css">
+
 
     <script src="static/js/jquery-1.11.3.min.js"></script>
     <script src="static/js/jquery.jscroll.min.js"></script>
@@ -270,7 +269,6 @@
             if (scrolled >= height) {
                 buttonPushed();
             }
-            document.getElementById('showScroll').innerHTML = scrolled + 'px';
         }
 
         // xmlhttp.onreadystatechange = GetArticles;
@@ -278,6 +276,301 @@
         // request is terminated.
 
     </script>
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <script type="text/javascript">
+        loadGaugeChart(function () {
+            drawGaugeChart(1, 1, 1, 1000, 1000, 1000, 50, 50, 50, 70, 70, 70);
+        });
+        function loadGaugeChart(myCallback) {
+            google.load("visualization", "1", {packages: ["gauge"], callback: myCallback});
+        }
+        google.setOnLoadCallback(drawGaugeChart);
+        var xmlhttp;
+        if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari 
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5 
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        function receive_av() {
+            var json = {"io": "90", "mem": "10", "cpu": "10"};
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var jsonobj = JSON.parse(xmlhttp.responseText);
+                drawGaugeChart(parseInt(json["io"]), parseInt(json["mem"]), parseInt(json["cpu"]), io_max, mem_max, cpu_max, io_yellow, mem_yellow, cpu_yellow, io_red, mem_red, cpu_red);
+                var output = xmlhttp.responseText;
+                //document.getElementById("raw").innerHTML = output;   
+            } else {
+                alert("data not available");
+            }
+        }
+        xmlhttp.onload = receive_av;
+        var io_max, mem_max, cpu_max, io_yellow, mem_yellow, cpu_yellow, io_red, mem_red, cpu_red;
+        function request_av(id) {
+            var dict = form_params(id);
+            io_max = dict["io_max"]
+            mem_max = dict["mem_max"]
+            cpu_max = dict["cpu_max"]
+            io_yellow = dict["io_yellow"]
+            mem_yellow = dict["mem_yellow"]
+            cpu_yellow = dict["cpu_yellow"]
+            io_red = dict["io_red"]
+            mem_red = dict["mem_red"]
+            cpu_red = dict["cpu_red"]
+            xmlhttp.open("POST", "/getallitems.json?" + "action=get_AV", true);
+            xmlhttp.send();
+        }
+        function form_params(form) {
+            var params = [];
+            var length = form.elements.length;
+            for (var i = 0; i < length; i++) {
+                element = form.elements[i];
+                if (element.tagName == 'TEXTAREA') {
+                    params[element.name] = element.value
+                } else if (element.tagName == 'INPUT') {
+                    if (element.type == 'text' || element.type == 'hidden' || element.type == 'password') {
+                        params[element.name] = element.value
+                    }
+                    else if (element.type == 'radio' && element.checked) {
+                        if (!element.value)
+                            params[element.name] = "on";
+                        else
+                            params[element.name] = element.value
+                    } else if (element.type == 'checkbox' && element.checked) {
+                        if (!element.value)                         params[element.name] = "on";
+                        else                         params[element.name] = element.value
+                    }
+                }
+            }
+            return params;
+        }
+        function drawGaugeChart(io, mem, cpu, io_max, mem_max, cpu_max, io_yellow, mem_yellow, cpu_yellow, io_red, mem_red, cpu_red) {
+            var data_io = google.visualization.arrayToDataTable([['Label', 'Value'], ['I/O', io / io_max * 100]]);
+            var options_io = {
+                width: 200,
+                height: 200,
+                redFrom: io_red,
+                redTo: 100,
+                yellowFrom: io_yellow,
+                yellowTo: io_red,
+                greenFrom: 0,
+                greenTo: io_yellow,
+                minorTicks: 5,
+            };
+            var data_mem = google.visualization.arrayToDataTable([['Label', 'Value'], ['Memory', mem / mem_max * 100]]);
+            var options_mem = {
+                width: 200,
+                height: 200,
+                redFrom: mem_red,
+                redTo: 100,
+                yellowFrom: mem_yellow,
+                yellowTo: mem_red,
+                greenFrom: 0,
+                greenTo: mem_yellow,
+                minorTicks: 5
+            };
+            var data_cpu = google.visualization.arrayToDataTable([['Label', 'Value'], ['CPU', cpu / cpu_max * 100]]);
+            var options_cpu = {
+                width: 200,
+                height: 200,
+                redFrom: cpu_red,
+                redTo: 100,
+                yellowFrom: cpu_yellow,
+                yellowTo: cpu_red,
+                greenFrom: 0,
+                greenTo: cpu_yellow,
+                minorTicks: 5
+            };
+            var chart_io = new google.visualization.Gauge(document.getElementById('chart_div_io'));
+            chart_io.draw(data_io, options_io);
+            var chart_mem = new google.visualization.Gauge(document.getElementById('chart_div_mem'));
+            chart_mem.draw(data_mem, options_mem);
+            var chart_cpu = new google.visualization.Gauge(document.getElementById('chart_div_cpu'));
+            chart_cpu.draw(data_cpu, options_cpu);
+        }  </script>
+      
+    <script type="text/javascript">
+        var xmlhttp;
+
+        // Are we using a modern browser or ...
+        if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        function receive_ag() {
+            var json = {"io": "1000", "mem": "12", "cpu": "33"};
+
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                // var jsonobj = eval ("(" + xmlhttp.responseText + ")");
+                var jsonobj = JSON.parse(xmlhttp.responseText);
+                document.getElementById("info").innerHTML = "Average parameters per specified time block:";
+                document.getElementById("io_average").innerHTML = "I/O disk:" + " " + json["io"];
+                document.getElementById("mem_average").innerHTML = "Memory space:" + " " + json["mem"];
+                document.getElementById("cpu_average").innerHTML = "CPU time:" + " " + json["cpu"];
+            } else {
+                alert("data not available");
+            }
+        }
+
+        xmlhttp.onload = receive_ag;
+
+        function request_ag(id) {
+            var dict = form_params(id);
+            xmlhttp.open("POST", "/getallitems.json?" + "&action=get_ag&k=" + dict["time_block"], true);
+            xmlhttp.send();
+        }
+
+        function form_params(form) {
+            var params = [];
+            var length = form.elements.length;
+            for (var i = 0; i < length; i++) {
+                element = form.elements[i];
+
+                if (element.tagName == 'TEXTAREA') {
+                    params[element.name] = element.value
+                }
+                else if (element.tagName == 'INPUT') {
+                    if (element.type == 'text' || element.type == 'hidden' || element.type == 'password') {
+                        params[element.name] = element.value
+                    }
+                    else if (element.type == 'radio' && element.checked) {
+                        if (!element.value)
+                            params[element.name] = "on";
+                        else
+                            params[element.name] = element.value
+
+                    }
+                    else if (element.type == 'checkbox' && element.checked) {
+                        if (!element.value)
+                            params[element.name] = "on";
+                        else
+                            params[element.name] = element.value
+                    }
+                }
+            }
+            return params;
+        }
+
+
+    </script>
+      
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+     
+    <script type="text/javascript">
+
+
+        loadTimeChart(function () {
+            drawTimeChart([["Time","I/O disk","Memory","CPU time"],[1,2,3,4],[2,2,3,4],[3,2,3,4],[4,2,3,4]]);
+        });
+        function loadTimeChart(myCallback) {
+            google.load("visualization", "1.1", {packages: ["bar"], callback: myCallback});
+        }
+        google.setOnLoadCallback(drawTimeChart);
+
+        var xmlhttp;
+
+        if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari 
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5 
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+
+        function receive_ag_per() {
+
+            var json = {
+                "io": [0, 1, 2, 3],
+                "mem": [0, 1, 2, 3],
+                "cpu": [0, 1, 2, 3]
+            }
+            var x = new Array(json["io"].length);
+            for (var i = 0; i < json["io"].length; i++) {
+                x[i] = new Array(4);
+            }
+            for (var i = 1; i < json["io"].length; i++) {
+                for (var j = 0; j <= 3; j++) {
+                    if (j == 0) {
+                        console.log(parseInt(from) + i * parseInt(time_block) - 1)
+                        x[i][j] = parseInt(from) + i * parseInt(time_block) - 1;
+                    }
+                    if (j == 1) {
+                        x[i][j] = parseInt(json["io"][i]);
+                    }
+                    if (j == 2) {
+                        x[i][j] = parseInt(json["mem"][i]);
+                    }
+                    if (j == 3) {
+                        x[i][j] = parseInt(json["cpu"][i]);
+                    }
+                }
+            }
+            x[0][0] = "Time";
+            x[0][1] = "I/O disk";
+            x[0][2] = "Memory";
+            x[0][3] = "CPU time";
+
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var jsonobj = JSON.parse(xmlhttp.responseText);
+                drawTimeChart(x);
+                var output = xmlhttp.responseText;
+                //document.getElementById("raw").innerHTML = output;   
+            } else {
+                alert("data not available");
+            }
+        }
+
+        xmlhttp.onload = receive_ag_per;
+        var from, to, time_block;
+
+        function request_ag_per(id) {
+            var dict = form_params(id);
+            from = dict["from"]
+            to = dict["to"]
+            time_block = dict["time_block"]
+            xmlhttp.open("POST", "/getallitems.json?" + "action=get_ag_per&from=" + from + "&to=" + to + "&k=" + time_block, true);
+            xmlhttp.send();
+        }
+        function form_params(form) {
+            var params = [];
+            var length = form.elements.length;
+            for (var i = 0; i < length; i++) {
+                element = form.elements[i];
+                if (element.tagName == 'TEXTAREA') {
+                    params[element.name] = element.value
+                } else if (element.tagName == 'INPUT') {
+                    if (element.type == 'text' || element.type == 'hidden' || element.type == 'password') {
+                        params[element.name] = element.value
+                    }
+                    else if (element.type == 'radio' && element.checked) {
+                        if (!element.value)
+                            params[element.name] = "on";
+                        else
+                            params[element.name] = element.value
+                    } else if (element.type == 'checkbox' && element.checked) {
+                        if (!element.value)                         params[element.name] = "on";
+                        else                         params[element.name] = element.value
+                    }
+                }
+            }
+            return params;
+        }
+
+        function drawTimeChart(x) {
+            var data = google.visualization.arrayToDataTable(x);
+            var options = {
+                width: 800, height: 400
+            };
+            var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+            chart.draw(data, options);
+        } </script>
+     
 
 
 </head>
@@ -293,8 +586,7 @@
                     aria-expanded="false" aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
             </button>
-            <a class="topico navbar-brand" href="#">DMD Pr&#160;<span class="glyphicon glyphicon-globe"></span>&#160;ject
-                <p id="showScroll"></p></a>
+            <a class="topico navbar-brand" href="#">DMD Pr&#160;<span class="glyphicon glyphicon-globe"></span>&#160;ject</a>
 
         </div>
         <div id="navbar" class="navbar-collapse collapse">
@@ -316,7 +608,7 @@
             <ul class="nav nav-pills nav-stacked col-md-2">
                 <li class="active"><a href="#tab1" data-toggle="tab">Records manipulator</a></li>
                 <li><a href="#tab2" data-toggle="tab">SQL queries console</a></li>
-                <li><a href="#tab3" data-toggle="tab">Graphics</a></li>
+                <li><a href="#tab3" data-toggle="tab">Performance Dashboard</a></li>
             </ul>
 
             <div class="tab-content col-md-9">
@@ -1004,12 +1296,152 @@
                 <!------------------------------------------------------------------------------------------------------------------------------------>
                 <div class="tab-pane" id="tab3">
 
-                    <h2>Graphics</h2>
+                    <h2>Performance Dashboard</h2>
 
-                    <p>FYODOR ETO TY?
-                        PSHHH , PSHHH , PSHHH! NICHEGO NE SLISHNO! </p>
+                    <ul id="myTab3" class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#guage"><span
+                                class="glyphicon glyphicon-dashboard"></span></a></li>
+                        <li><a data-toggle="tab" href="#aggregated_values"><span
+                                class="glyphicon glyphicon-text-background"></span></a></li>
+                        <li><a data-toggle="tab" href="#sweep"><span class="glyphicon glyphicon-hourglass"></span></a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="guage" class="tab-pane fade in active">
+                            <h2>Overall health</h2>
+
+                            <form id="max_and_thresholds" class="form-horizontal" name="max_and_thresholds" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="io_max"
+                                               placeholder="Maximum for I/O disk">
+                                        <span class="input-group-addon">max io</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="mem_max"
+                                               placeholder="Maximum for Memory">
+                                        <span class="input-group-addon">max mem</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="cpu_max"
+                                               placeholder="Maximum for Cpu time">
+                                        <span class="input-group-addon">max cpu</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control"
+                                               name="io_yellow" placeholder="Yellow threshold for I/O disk">
+                                        <span class="input-group-addon">yell. io</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control"
+                                               name="mem_yellow" placeholder="Yellow threshold for Memory">
+                                        <span class="input-group-addon">yell. mem</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control"
+                                               name="cpu_yellow" placeholder="Yellow threshold for CPU time">
+                                        <span class="input-group-addon">yell. cpu</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control"
+                                               name="io_red" placeholder="Red threshold for I/O disk">
+                                        <span class="input-group-addon">red io</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control"
+                                               name="mem_red" placeholder="Red threshold for Memory">
+                                        <span class="input-group-addon">red mem</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control"
+                                               name="cpu_red" placeholder="Red threshold for CPU time">
+                                        <span class="input-group-addon">red cpu</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary">Show health
+                                </button>
+                                <br>
+                            </form>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div id="chart_div_io"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div id="chart_div_mem"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div id="chart_div_cpu"></div>
+                                </div>
+                            </div>
 
 
+                        </div>
+
+                        <div id="aggregated_values" class="tab-pane fade">
+                            <h2>Aggregated values</h2>
+
+                            <p>Input unit time block that you are interested in:</p>
+
+                            <form id="aggregated" class="myClass">
+                                <input type="text" name="time_block"><br> <br>
+                                <button onClick="request_ag(document.getElementById('aggregated')); return false; "
+                                        class="btn btn-primary"
+                                        id="time_block_btn">Show values
+                                </button>
+                                <br>
+                            </form>
+                            <br>
+
+
+                            <div id="info"></div>
+                            <br/>
+
+                            <div id="io_average"></div>
+                            <br/>
+
+                            <div id="mem_average"></div>
+                            <br/>
+
+                            <div id="cpu_average"></div>
+
+
+                        </div>
+
+                        <div id="sweep" class="tab-pane fade">
+                            <h2>Sweep</h2>
+
+                            <form id="aggregated_period" class="myClass">
+                                <input type="text" name="from"><br> <br>
+                                <input type="text" name="to"><br> <br>
+                                <input type="text" name="time_block"><br> <br>
+                                <button onClick="request_ag_per(document.getElementById('aggregated_period')); return false; "
+                                        class="btn btn-primary">Show values
+                                </button>
+                                <br>
+                            </form>
+                            <br>
+
+
+                            <div id="columnchart_material" style="width: 900px; height: 500px;"></div>
+                        </div>
+                    </div>
                 </div>
                 <!------------------------------------------------------------------------------------------------------------------------------------>
 
@@ -1019,10 +1451,6 @@
                     <div class="col-md-2 col-md-offset-5"></div>
 
                     <h2 class="sub-header"> Result</h2>
-
-
-                    <!--TODO Lazy loading-->
-
 
                     <div class="content">
                         <div id="forin">
