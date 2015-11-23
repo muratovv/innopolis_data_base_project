@@ -278,7 +278,7 @@
     </script>
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-     
+
     <script type="text/javascript">
         loadGaugeChart(function () {
             drawGaugeChart(1, 1, 1, 1000, 1000, 1000, 50, 50, 50, 70, 70, 70);
@@ -459,48 +459,118 @@
 
     </script>
       
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-     
-    <script type="text/javascript">     google.load("visualization", "1.1", {packages: ["bar"]});
-    google.setOnLoadCallback(drawTimeChart);
-    function drawTimeChart() {
-        var data = google.visualization.arrayToDataTable([['Time', 'I/O disk', 'Memory', 'CPU time'], ['7-8 a.m.', 1000, 400, 200], ['8-9 a.m.', 1170, 460, 250], ['9-10 a.m.', 660, 1120, 300], ['10-11 a.m.', 1030, 540, 350]]);
-        var options = {
-            chart: {
-                title: "",
-                subtitle: 'I/O disk, Memory and CPU time: 7-11 a.m.',
-                legend: {position: "bottom"}
-            }
-        };
-        var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
-        chart.draw(data, options);
-    } </script>
 
-      
-    <script language="JavaScript" type="text/javascript">      function average_per_time_block() {
-        var json = {"io": "1000", "mem": "12", "cpu": "33"};
-        document.getElementById("info").innerHTML = "Average parameters per specified time block:";
-        document.getElementById("io_average").innerHTML = "I/O disk:" + " " + json["io"];
-        document.getElementById("mem_average").innerHTML = "Memory space:" + " " + json["mem"];
-        document.getElementById("cpu_average").innerHTML = "CPU time:" + " " + json["cpu"];
-    } </script>
-      
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
      
-    <script type="text/javascript">     google.load("visualization", "1.1", {packages: ["bar"]});
-    google.setOnLoadCallback(drawTimeChart);
-    function drawTimeChart() {
-        var data = google.visualization.arrayToDataTable([['Time', 'I/O disk', 'Memory', 'CPU time'], ['7-8 a.m.', 1000, 400, 200], ['8-9 a.m.', 1170, 460, 250], ['9-10 a.m.', 660, 1120, 300], ['10-11 a.m.', 1030, 540, 350]]);
-        var options = {
-            chart: {
-                title: "",
-                subtitle: 'I/O disk, Memory and CPU time: 7-11 a.m.',
-                legend: {position: "bottom"}
+    <script type="text/javascript">
+
+
+        loadTimeChart(function () {
+            drawTimeChart(1);
+        });
+        function loadTimeChart(myCallback) {
+            google.load("visualization", "1.1", {packages: ["bar"], callback: myCallback});
+        }
+        google.setOnLoadCallback(drawTimeChart);
+
+        var xmlhttp;
+
+        if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari 
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5 
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+
+        function receive_ag_per() {
+
+            var json = {
+                "io": [0, 1, 2, 3],
+                "mem": [0, 1, 2, 3],
+                "cpu": [0, 1, 2, 3]
             }
-        };
-        var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
-        chart.draw(data, options);
-    } </script>
+            var x = new Array(json["io"].length);
+            for (var i = 0; i < json["io"].length; i++) {
+                x[i] = new Array(4);
+            }
+            for (var i = 1; i < json["io"].length; i++) {
+                for (var j = 0; j <= 3; j++) {
+                    if (j == 0) {
+                        console.log(parseInt(from) + i * parseInt(time_block) - 1)
+                        x[i][j] = parseInt(from) + i * parseInt(time_block) - 1;
+                    }
+                    if (j == 1) {
+                        x[i][j] = parseInt(json["io"][i]);
+                    }
+                    if (j == 2) {
+                        x[i][j] = parseInt(json["mem"][i]);
+                    }
+                    if (j == 3) {
+                        x[i][j] = parseInt(json["cpu"][i]);
+                    }
+                }
+            }
+            x[0][0] = "Time";
+            x[0][1] = "I/O disk";
+            x[0][2] = "Memory";
+            x[0][3] = "CPU time";
+
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var jsonobj = JSON.parse(xmlhttp.responseText);
+                drawTimeChart(x);
+                var output = xmlhttp.responseText;
+                //document.getElementById("raw").innerHTML = output;   
+            } else {
+                alert("data not available");
+            }
+        }
+
+        xmlhttp.onload = receive_ag_per;
+        var from, to, time_block;
+
+        function request_ag_per(id) {
+            var dict = form_params(id);
+            from = dict["from"]
+            to = dict["to"]
+            time_block = dict["time_block"]
+            xmlhttp.open("POST", "/getallitems.json?" + "action=get_ag_per&from=" + from + "&to=" + to + "&time_block=" + time_block, true);
+            xmlhttp.send();
+        }
+        function form_params(form) {
+            var params = [];
+            var length = form.elements.length;
+            for (var i = 0; i < length; i++) {
+                element = form.elements[i];
+                if (element.tagName == 'TEXTAREA') {
+                    params[element.name] = element.value
+                } else if (element.tagName == 'INPUT') {
+                    if (element.type == 'text' || element.type == 'hidden' || element.type == 'password') {
+                        params[element.name] = element.value
+                    }
+                    else if (element.type == 'radio' && element.checked) {
+                        if (!element.value)
+                            params[element.name] = "on";
+                        else
+                            params[element.name] = element.value
+                    } else if (element.type == 'checkbox' && element.checked) {
+                        if (!element.value)                         params[element.name] = "on";
+                        else                         params[element.name] = element.value
+                    }
+                }
+            }
+            return params;
+        }
+
+        function drawTimeChart(x) {
+            var data = google.visualization.arrayToDataTable(x);
+            var options = {
+                width: 800, height: 400
+            };
+            var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+            chart.draw(data, options);
+        } </script>
+     
 
 
 </head>
@@ -1307,6 +1377,18 @@
 
                         <div id="sweep" class="tab-pane fade">
                             <h2>Sweep</h2>
+
+                            <form id="aggregated_period" class="myClass">
+                                <input type="text" name="from"><br> <br>
+                                <input type="text" name="to"><br> <br>
+                                <input type="text" name="time_block"><br> <br>
+                                <button onClick="request_ag_per(document.getElementById('aggregated_period')); return false; "
+                                        class="btn btn-primary">Show values
+                                </button>
+                                <br>
+                            </form>
+                            <br>
+
 
                             <div id="columnchart_material" style="width: 900px; height: 500px;"></div>
                         </div>
