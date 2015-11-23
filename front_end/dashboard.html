@@ -368,7 +368,7 @@
             return params;
         }
         function drawGaugeChart(io, mem, cpu, io_max, mem_max, cpu_max, io_yellow, mem_yellow, cpu_yellow, io_red, mem_red, cpu_red) {
-            var data_io = google.visualization.arrayToDataTable([['Label', 'Value'], ['I/O', io / io_max * 100]]);
+            var data_io = google.visualization.arrayToDataTable([['Label', 'Value'], ['I/O', ~~(io / io_max * 100)]]);
             var options_io = {
                 width: 200,
                 height: 200,
@@ -380,7 +380,7 @@
                 greenTo: io_yellow,
                 minorTicks: 5,
             };
-            var data_mem = google.visualization.arrayToDataTable([['Label', 'Value'], ['Memory', mem / mem_max * 100]]);
+            var data_mem = google.visualization.arrayToDataTable([['Label', 'Value'], ['Memory', ~~(mem / mem_max * 100)]]);
             var options_mem = {
                 width: 200,
                 height: 200,
@@ -392,7 +392,7 @@
                 greenTo: mem_yellow,
                 minorTicks: 5
             };
-            var data_cpu = google.visualization.arrayToDataTable([['Label', 'Value'], ['CPU', cpu / cpu_max * 100]]);
+            var data_cpu = google.visualization.arrayToDataTable([['Label', 'Value'], ['CPU', ~~(cpu / cpu_max * 100)]]);
             var options_cpu = {
                 width: 200,
                 height: 200,
@@ -566,7 +566,7 @@
             xmlhttp.send();
             xmlhttp.onload = receive_ag_per;
         }
-        
+
         function form_params_per3(form) {
             var params = [];
             var length = form.elements.length;
