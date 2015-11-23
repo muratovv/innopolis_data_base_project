@@ -424,15 +424,16 @@
             xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
         function receive_ag() {
-            var json = {"io": "1000", "mem": "12", "cpu": "33"};
+//            var json = {"io": "1000", "mem": "12", "cpu": "33"};
 
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 // var jsonobj = eval ("(" + xmlhttp.responseText + ")");
-//                var jsonobj = JSON.parse(xmlhttp.responseText);
+                var jsonobj = JSON.parse(xmlhttp.responseText);
+                console.log(jsonobj);
                 document.getElementById("info").innerHTML = "Average parameters per specified time block:";
-                document.getElementById("io_average").innerHTML = "I/O disk:" + " " + json["io"];
-                document.getElementById("mem_average").innerHTML = "Memory space:" + " " + json["mem"];
-                document.getElementById("cpu_average").innerHTML = "CPU time:" + " " + json["cpu"];
+                document.getElementById("io_average").innerHTML = "I/O disk:" + " " + jsonobj["io"];
+                document.getElementById("mem_average").innerHTML = "Memory space:" + " " + jsonobj["mem"];
+                document.getElementById("cpu_average").innerHTML = "CPU time:" + " " + jsonobj["cpu"];
             } else {
                 alert("data not available");
             }
